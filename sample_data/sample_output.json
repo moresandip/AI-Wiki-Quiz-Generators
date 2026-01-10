@@ -1,0 +1,51 @@
+{
+  "id": 1,
+  "url": "https://en.wikipedia.org/wiki/Alan_Turing",
+  "title": "Alan Turing",
+  "summary": "Alan Mathison Turing OBE FRS was an English mathematician, computer scientist, logician, cryptanalyst, philosopher and theoretical biologist. Turing was highly influential in the development of theoretical computer science, providing a formalisation of the concepts of algorithm and computation with the Turing machine, which can be considered a model of a general-purpose computer. Turing is widely considered to be the father of theoretical computer science and artificial intelligence.",
+  "key_entities": {
+    "people": ["Alan Turing", "Alonzo Church", "David Hilbert"],
+    "organizations": ["University of Cambridge", "Bletchley Park", "Princeton University"],
+    "locations": ["United Kingdom", "England"]
+  },
+  "sections": ["Early life and education", "Career and research", "Personal life", "Death", "Legacy"],
+  "quiz": [
+    {
+      "question": "What is Alan Turing best known for?",
+      "options": [
+        "Inventing the telephone",
+        "Developing the theory of computation and the Turing machine",
+        "Discovering penicillin",
+        "Building the first airplane"
+      ],
+      "answer": "Developing the theory of computation and the Turing machine",
+      "difficulty": "easy",
+      "explanation": "Turing formalized the concepts of algorithm and computation with the Turing machine."
+    },
+    {
+      "question": "During which war did Turing work at Bletchley Park?",
+      "options": [
+        "World War I",
+        "World War II",
+        "Cold War",
+        "Vietnam War"
+      ],
+      "answer": "World War II",
+      "difficulty": "medium",
+      "explanation": "Turing worked as a cryptanalyst at Bletchley Park during World War II."
+    },
+    {
+      "question": "What was the name of Turing's famous test for machine intelligence?",
+      "options": [
+        "Turing Test",
+        "Halting Problem",
+        "Church-Turing Thesis",
+        "Enigma Code"
+      ],
+      "answer": "Turing Test",
+      "difficulty": "medium",
+      "explanation": "The Turing Test is a method of inquiry in artificial intelligence for determining whether or not a computer is capable of thinking like a human."
+    }
+  ],
+  "related_topics": ["Computer science", "Artificial intelligence", "Cryptography", "Mathematics"]
+}

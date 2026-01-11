@@ -105,7 +105,7 @@ async def generate_quiz(request: QuizRequest, db: Any = Depends(get_db)):
 
         # Create quiz response - ensure title and summary are at top level for consistency
         quiz_response = QuizResponse(
-            id=1,  # Dummy ID since not saved to DB
+            id=None,  # No ID since not saved to DB
             url=target_url,
             title=quiz_data.get("title") or scraped_data.get("title"),
             summary=quiz_data.get("summary") or scraped_data.get("summary"),

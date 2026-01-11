@@ -10,7 +10,7 @@ class SaveResultsRequest(BaseModel):
     user_answers: Dict[str, Any]
 
 class QuizResponse(BaseModel):
-    id: int
+    id: Optional[int] = None
     url: str
     title: Optional[str] = None
     summary: Optional[str] = None

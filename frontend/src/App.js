@@ -10,6 +10,7 @@ function App() {
   const [error, setError] = useState(null);
   const [history, setHistory] = useState([]);
   const [showHistory, setShowHistory] = useState(false);
+  const [deleteConfirm, setDeleteConfirm] = useState({ show: false, quizId: null, type: null });
 
   React.useEffect(() => {
     fetchHistory();
@@ -39,7 +40,12 @@ function App() {
 
   const deleteQuiz = async (e, quizId) => {
     e.stopPropagation(); // Prevent loading the quiz
-    if (!window.confirm("Are you sure you want to delete this quiz?")) return;
+    setDeleteConfirm({ show: true, quizId, type: 'history' });
+  };
+
+  const confirmDelete = async () => {
+    const { quizId, type } = deleteConfirm;
+    setDeleteConfirm({ show: false, quizId: null, type: null });
 
     try {
       const isProduction = process.env.NODE_ENV === 'production';
@@ -48,7 +54,12 @@ function App() {
       const response = await fetch(apiUrl, { method: 'DELETE' });
 
       if (response.ok) {
-        setHistory(history.filter(q => q.id !== quizId));
+        if (type === 'history') {
+          setHistory(history.filter(q => q.id !== quizId));
+        } else if (type === 'current') {
+          resetQuiz();
+          fetchHistory(); // Refresh history
+        }
       } else {
         alert("Failed to delete quiz");
       }
@@ -56,6 +67,10 @@ function App() {
       console.error("Error deleting quiz:", err);
       alert("Error deleting quiz");
     }
+  };
+
+  const cancelDelete = () => {
+    setDeleteConfirm({ show: false, quizId: null, type: null });
   };
 
   const handleGenerate = async () => {
@@ -208,6 +223,18 @@ function App() {
 
   return (
     <div className="App">
+      {deleteConfirm.show && (
+        <div className="delete-confirm-overlay">
+          <div className="delete-confirm-dialog">
+            <h3>Confirm Delete</h3>
+            <p>Are you sure you want to delete this quiz? This action cannot be undone.</p>
+            <div className="delete-confirm-actions">
+              <button onClick={cancelDelete} className="cancel-btn">Cancel</button>
+              <button onClick={confirmDelete} className="confirm-delete-btn">Delete</button>
+            </div>
+          </div>
+        </div>
+      )}
       <header className="App-header">
         <h1>AI Wiki Quiz Generator</h1>
         <p>Turn any Wikipedia article into an interactive quiz instantly.</p>
@@ -333,10 +360,20 @@ function App() {
                   You scored <strong>{calculateScore()}</strong> out of <strong>{quizData.data.quiz.length}</strong>
                 </p>
                 <div className="results-actions">
-                  <button onClick={handleSaveQuiz} className="save-btn" disabled={!quizData.id}>
+                  <button
+                    onClick={handleSaveQuiz}
+                    className="save-btn"
+                    disabled={!quizData.id}
+                    title={!quizData.id ? "Database not available - cannot save results" : "Save your results"}
+                  >
                     Save Results
                   </button>
-                  <button onClick={() => deleteCurrentQuiz(quizData.id)} className="delete-btn" disabled={!quizData.id}>
+                  <button
+                    onClick={() => deleteCurrentQuiz(quizData.id)}
+                    className="delete-btn"
+                    disabled={!quizData.id}
+                    title={!quizData.id ? "Database not available - cannot delete" : "Delete this quiz"}
+                  >
                     Delete Quiz
                   </button>
                   <button onClick={resetQuiz} className="reset-btn large">Try Another Article</button>

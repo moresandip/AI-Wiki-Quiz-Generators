@@ -609,3 +609,15 @@ body {
     grid-template-columns: 1fr 1fr;
   }
 }
+
+.view-article-link {
+  display: inline-block;
+  margin: 10px 0 20px;
+  color: #007bff;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.view-article-link:hover {
+  text-decoration: underline;
+}

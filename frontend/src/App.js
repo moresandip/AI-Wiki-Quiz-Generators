@@ -301,6 +301,14 @@ function App() {
             <div className="quiz-header">
               <h2>{quizData.title}</h2>
               <p className="quiz-summary">{quizData.summary}</p>
+              <a
+                href={quizData.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="view-article-link"
+              >
+                View Article on Wikipedia ↗
+              </a>
               <button onClick={resetQuiz} className="reset-btn">Create New Quiz</button>
             </div>
 
@@ -381,16 +389,7 @@ function App() {
               </div>
             )}
 
-            {quizData.data.related_topics && (
-              <div className="related-topics">
-                <h4>Related Topics:</h4>
-                <div className="topics-tags">
-                  {quizData.data.related_topics.map((topic, i) => (
-                    <span key={i} className="topic-tag">{topic}</span>
-                  ))}
-                </div>
-              </div>
-            )}
+
           </div>
         )}
       </main>

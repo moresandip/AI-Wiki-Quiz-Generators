@@ -71,7 +71,6 @@ Instructions:
 4. The 'answer' field MUST BE AN EXACT STRING MATCH to one of the options.
 5. Provide a short, clear explanation for why the answer is correct, citing the context if possible.
 6. Vary the difficulty (easy, medium, hard).
-7. Suggest 3-5 related topics for further reading.
 
 Output the result in this exact JSON format:
 {{
@@ -83,8 +82,7 @@ Output the result in this exact JSON format:
       "difficulty": "easy",
       "explanation": "Explanation here."
     }}
-  ],
-  "related_topics": ["Topic1", "Topic2", "Topic3"]
+  ]
 }}
 
 Output strictly valid JSON only.
@@ -205,6 +203,5 @@ def generate_quiz_data(scraped_data):
         "summary": scraped_data["summary"],
         "key_entities": scraped_data["key_entities"],
         "sections": scraped_data["sections"],
-        "quiz": quiz_data.get("quiz", []),
-        "related_topics": quiz_data.get("related_topics", [])
+        "quiz": quiz_data.get("quiz", [])
     }

@@ -133,7 +133,7 @@ def generate_quiz_data(scraped_data):
             "parts": [{"text": prompt_text}]
         }],
         "generationConfig": {
-            "temperature": 0.7,
+            "temperature": 0.9, # Higher temperature = more variety
             "response_mime_type": "application/json"
         }
     }

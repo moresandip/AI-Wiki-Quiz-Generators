@@ -160,31 +160,43 @@ def generate_quiz_data(scraped_data):
                 # For other errors, raise immediately
                 raise
     
-    # If all models failed, raise the last error with user-friendly message
+    # If all models failed, fall back to sample data if available
     if last_error:
-        error_msg = str(last_error)
-        if "RESOURCE_EXHAUSTED" in error_msg or "429" in error_msg or "quota" in error_msg.lower():
-            raise ValueError(
-                "API quota exceeded. This usually means:\n"
-                "1. You've reached your daily free tier limit (wait 24 hours)\n"
-                "2. You've made too many requests too quickly (wait a few minutes)\n"
-                "3. Check your quota at: https://ai.dev/rate-limit\n\n"
-                "Please try again later or upgrade your API plan."
-            )
-        elif "NOT_FOUND" in error_msg or "404" in error_msg or "not found" in error_msg.lower():
-            models_tried_str = "\n".join(tried_models) if tried_models else "No models tried"
-            raise ValueError(
-                f"None of the available models worked. Tried {len(tried_models)} models.\n\n"
-                "Likely Cause: API not enabled or packages need updating.\n"
-                "Solutions:\n"
-                "1. ENABLE API: https://console.cloud.google.com/apis/library/generativelanguage.googleapis.com\n"
-                "2. Update packages: cd backend && venv\\Scripts\\activate && pip install --upgrade langchain-google-genai google-generativeai\n"
-                "3. Verify API Key: https://aistudio.google.com/app/apikey\n"
-                "4. Check status: Visit http://localhost:8000/api-status\n"
-                f"Models tried: {models_tried_str[:200]}..."
-            )
+        if SAMPLE_QUIZ_DATA:
+            print("WARNING: All models failed. Falling back to sample data for demonstration.")
+            return {
+                "title": scraped_data["title"],
+                "summary": scraped_data["summary"],
+                "key_entities": scraped_data["key_entities"],
+                "sections": scraped_data["sections"],
+                "quiz": SAMPLE_QUIZ_DATA["quiz"],
+                "related_topics": SAMPLE_QUIZ_DATA.get("related_topics", [])
+            }
         else:
-            raise ValueError(f"Failed to generate quiz: {error_msg}")
+            # If no sample data, raise the error
+            error_msg = str(last_error)
+            if "RESOURCE_EXHAUSTED" in error_msg or "429" in error_msg or "quota" in error_msg.lower():
+                raise ValueError(
+                    "API quota exceeded. This usually means:\n"
+                    "1. You've reached your daily free tier limit (wait 24 hours)\n"
+                    "2. You've made too many requests too quickly (wait a few minutes)\n"
+                    "3. Check your quota at: https://ai.dev/rate-limit\n\n"
+                    "Please try again later or upgrade your API plan."
+                )
+            elif "NOT_FOUND" in error_msg or "404" in error_msg or "not found" in error_msg.lower():
+                models_tried_str = "\n".join(tried_models) if tried_models else "No models tried"
+                raise ValueError(
+                    f"None of the available models worked. Tried {len(tried_models)} models.\n\n"
+                    "Likely Cause: API not enabled or packages need updating.\n"
+                    "Solutions:\n"
+                    "1. ENABLE API: https://console.cloud.google.com/apis/library/generativelanguage.googleapis.com\n"
+                    "2. Update packages: cd backend && venv\\Scripts\\activate && pip install --upgrade langchain-google-genai google-generativeai\n"
+                    "3. Verify API Key: https://aistudio.google.com/app/apikey\n"
+                    "4. Check status: Visit http://localhost:8000/api-status\n"
+                    f"Models tried: {models_tried_str[:200]}..."
+                )
+            else:
+                raise ValueError(f"Failed to generate quiz: {error_msg}")
 
     # Extract content from the response (LangChain returns a message object)
     if hasattr(result, 'content'):

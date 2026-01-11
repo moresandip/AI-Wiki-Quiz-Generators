@@ -57,8 +57,41 @@ def scrape_wikipedia(url: str) -> dict:
             for heading in soup.find_all(['h2', 'h3'], {'class': 'mw-headline'}):
                 sections.append(heading.get_text(strip=True))
 
-            # Extract key entities (simple regex-based extraction)
-            text = soup.get_text()
+            # Extract content from introduction and first few sections only for speed
+            content_text = ""
+            
+            # 1. Get introduction (paragraphs before first h2)
+            intro_div = soup.find('div', {'id': 'mw-content-text'})
+            if intro_div:
+                parser_output = intro_div.find('div', {'class': 'mw-parser-output'})
+                if parser_output:
+                    # Get direct paragraphs until first h2
+                    for element in parser_output.children:
+                        if element.name == 'h2':
+                            break
+                        if element.name == 'p':
+                            content_text += element.get_text(strip=True) + "\n\n"
+                    
+                    # 2. Get next 2 main sections
+                    sections_count = 0
+                    current_section = ""
+                    for element in parser_output.find_all(['h2', 'p', 'h3']):
+                        if element.name == 'h2':
+                            sections_count += 1
+                            if sections_count > 3: # Limit to Intro + 3 sections
+                                break
+                            current_section = element.get_text(strip=True)
+                            content_text += f"\n## {current_section}\n"
+                        elif element.name in ['p', 'h3']:
+                            content_text += element.get_text(strip=True) + "\n"
+
+            # Fallback if sophisticated parsing fails
+            if not content_text:
+                content_text = soup.get_text()[:6000]
+
+            text = content_text
+            
+            # Simple Key Entities (from limited text now)
             people = re.findall(r'\b[A-Z][a-z]+ [A-Z][a-z]+\b', text)  # Simple name pattern
             organizations = re.findall(r'\b[A-Z][a-z]+ (University|College|Institute|Company|Corporation|Foundation)\b', text)
             locations = re.findall(r'\b[A-Z][a-z]+, [A-Z][a-z]+\b', text)  # City, Country
@@ -138,3 +171,30 @@ def scrape_wikipedia(url: str) -> dict:
     
     # If we get here, all retries failed
     raise ValueError(f"Failed to scrape {url} after {max_retries} attempts. Please check your internet connection.")
+
+def search_wikipedia(topic: str) -> str:
+    """
+    Search Wikipedia for a topic and return the URL of the top result.
+    """
+    try:
+        search_url = "https://en.wikipedia.org/w/api.php"
+        params = {
+            "action": "opensearch",
+            "search": topic,
+            "limit": 1,
+            "namespace": 0,
+            "format": "json"
+        }
+        
+        response = requests.get(search_url, params=params, timeout=10)
+        response.raise_for_status()
+        data = response.json()
+        
+        # data format: [search_term, [titles], [descriptions], [urls]]
+        if data and len(data) > 3 and data[3]:
+            return data[3][0]
+        
+        raise ValueError(f"No Wikipedia article found for topic: {topic}")
+        
+    except Exception as e:
+        raise ValueError(f"Failed to search for topic '{topic}': {str(e)}")

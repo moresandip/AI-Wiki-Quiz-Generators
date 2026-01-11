@@ -1,14 +1,8 @@
 import os
 import re
 import json
+import requests
 from dotenv import load_dotenv
-from langchain_google_genai import ChatGoogleGenerativeAI
-from langchain_core.prompts import PromptTemplate
-try:
-    import google.generativeai as genai
-    GENAI_AVAILABLE = True
-except ImportError:
-    GENAI_AVAILABLE = False
 
 # Load sample data as fallback
 SAMPLE_DATA_PATH = os.path.join(os.path.dirname(__file__), '..', 'sample_data', 'sample_output.json')
@@ -23,55 +17,45 @@ except Exception as e:
 load_dotenv()
 
 def list_available_models():
-    """List available models using google-generativeai library"""
-    if not GENAI_AVAILABLE:
+    """List available models using REST API to keep size small"""
+    api_key = os.getenv("GOOGLE_API_KEY")
+    if not api_key:
         return []
+    
     try:
-        api_key = os.getenv("GOOGLE_API_KEY")
-        if not api_key:
-            return []
-        genai.configure(api_key=api_key)
-        models = genai.list_models()
-        return [model.name.split('/')[-1] for model in models if 'generateContent' in model.supported_generation_methods]
+        url = f"https://generativelanguage.googleapis.com/v1beta/models?key={api_key}"
+        response = requests.get(url)
+        if response.status_code == 200:
+            data = response.json()
+            # Filter for generating content
+            return [m['name'].split('/')[-1] for m in data.get('models', []) 
+                    if 'generateContent' in m.get('supportedGenerationMethods', [])]
+        return []
     except Exception as e:
         print(f"Error listing models: {e}")
         return []
 
 def test_api_connection():
-    """Test if API key is valid by trying to create an LLM instance"""
+    """Test if API key is valid using REST API"""
     try:
         api_key = os.getenv("GOOGLE_API_KEY")
         if not api_key:
             return False, "GOOGLE_API_KEY not set in environment"
         
-        # Try to list available models first
-        if GENAI_AVAILABLE:
-            available = list_available_models()
-            if available:
-                print(f"Available models: {', '.join(available[:5])}...")  # Show first 5
+        # Try to list models as a lightweight check
+        url = f"https://generativelanguage.googleapis.com/v1beta/models?key={api_key}"
+        response = requests.get(url, timeout=10)
         
-        # Try to create an LLM instance with latest model
-        llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash-exp", google_api_key=api_key)
-        return True, "API key appears valid"
+        if response.status_code == 200:
+            return True, "API key appears valid"
+        else:
+            return False, f"API check failed with status {response.status_code}: {response.text}"
     except Exception as e:
         return False, f"API connection test failed: {str(e)}"
 
-def get_llm(model_name=None):
-    api_key = os.getenv("GOOGLE_API_KEY")
-    if not api_key:
-        raise ValueError("GOOGLE_API_KEY environment variable is not set")
-    # Try latest model names - these are the most current as of 2024
-    # Fallback options will be tried in generate_quiz_data if this fails
-    model = model_name or "gemini-2.0-flash-exp"
-    return ChatGoogleGenerativeAI(
-        model=model,
-        google_api_key=api_key,
-        temperature=0.7,
-    )
-
 # Prompt template for quiz generation
-quiz_prompt_template = """
-Based on the following Wikipedia article content, generate a quiz with 5-10 multiple-choice questions. Each question should have 4 options (A-D), one correct answer, a short explanation, and a difficulty level (easy, medium, hard).
+QUIZ_PROMPT_TEMPLATE = """
+You are an expert quiz generator. Your task is to create a highly accurate multiple-choice quiz based ONLY on the provided Wikipedia article content.
 
 Article Title: {title}
 Summary: {summary}
@@ -79,91 +63,117 @@ Sections: {sections}
 Key Entities: {key_entities}
 Full Text: {full_text}
 
-Output the quiz in the following JSON format:
+Instructions:
+1. Generate 5-10 multiple-choice questions.
+2. Questions must be factually correct and directly answerable from the text provided above. Do not hallucinate or use outside knowledge.
+3. Each question must have 4 options (A, B, C, D).
+4. The 'answer' field MUST BE AN EXACT STRING MATCH to one of the options.
+5. Provide a short, clear explanation for why the answer is correct, citing the context if possible.
+6. Vary the difficulty (easy, medium, hard).
+7. Suggest 3-5 related topics for further reading.
+
+Output the result in this exact JSON format:
 {{
   "quiz": [
     {{
       "question": "Question text",
-      "options": ["Option A", "Option B", "Option C", "Option D"],
-      "answer": "Correct Option Text",
-      "difficulty": "easy/medium/hard",
-      "explanation": "Short explanation"
+      "options": ["Option 1", "Option 2", "Option 3", "Option 4"],
+      "answer": "Option 2",
+      "difficulty": "easy",
+      "explanation": "Explanation here."
     }}
   ],
   "related_topics": ["Topic1", "Topic2", "Topic3"]
 }}
 
-Ensure questions are relevant to the article content and vary in difficulty.
+Output strictly valid JSON only.
 """
-
-quiz_prompt = PromptTemplate(
-    input_variables=["title", "summary", "sections", "key_entities", "full_text"],
-    template=quiz_prompt_template
-)
-
-quiz_chain = None
-
-def get_quiz_chain():
-    global quiz_chain
-    if quiz_chain is None:
-        llm_instance = get_llm()
-        quiz_chain = quiz_prompt | llm_instance
-    return quiz_chain
 
 def generate_quiz_data(scraped_data):
     """
-    Generate quiz data using the LLM based on scraped Wikipedia data.
-    Tries multiple models if one fails due to quota or availability issues.
+    Generate quiz data using direct REST API calls to Google Gemini.
+    Replaces the heavy SDK dependency to reduce build size.
     """
-    # List of models to try in order (latest models first)
-    # Updated with current model names as of 2024
+    api_key = os.getenv("GOOGLE_API_KEY")
+    if not api_key:
+         # Fallback to sample if no key (dev mode) or raise error
+         if SAMPLE_QUIZ_DATA:
+            return {
+                "title": scraped_data["title"],
+                "summary": scraped_data["summary"],
+                "key_entities": scraped_data["key_entities"],
+                "sections": scraped_data["sections"],
+                "quiz": SAMPLE_QUIZ_DATA["quiz"],
+                "related_topics": SAMPLE_QUIZ_DATA.get("related_topics", [])
+            }
+         raise ValueError("GOOGLE_API_KEY environment variable is not set")
+
+    # Models to try (REST API endpoint format) - Prioritize Flash for speed
     models_to_try = [
-        "gemini-2.0-flash-exp",           # Latest experimental
-        "gemini-2.0-flash-thinking-exp",  # Thinking variant
-        "gemini-1.5-flash-latest",        # Latest stable flash
-        "gemini-1.5-pro-latest",          # Latest stable pro
-        "gemini-1.5-flash",               # Standard flash
-        "gemini-1.5-pro",                 # Standard pro
-        "gemini-pro"                      # Legacy fallback
+        "gemini-1.5-flash",
+        "gemini-2.0-flash-exp", # Very fast experimental model
+        "gemini-1.5-pro",
+        "gemini-pro"
     ]
+    
     last_error = None
-    tried_models = []
+    
+    # Format the prompt
+    prompt_text = QUIZ_PROMPT_TEMPLATE.format(
+        title=scraped_data["title"],
+        summary=scraped_data["summary"],
+        sections=", ".join(scraped_data["sections"]),
+        key_entities=json.dumps(scraped_data["key_entities"]),
+        full_text=scraped_data["full_text"][:6000] # Drastically reduced for speed
+    )
+
+    request_body = {
+        "contents": [{
+            "parts": [{"text": prompt_text}]
+        }],
+        "generationConfig": {
+            "temperature": 0.7,
+            "response_mime_type": "application/json"
+        }
+    }
+
+    content = ""
     
     for model_name in models_to_try:
         try:
-            # Prepare input for the LLM
-            input_data = {
-                "title": scraped_data["title"],
-                "summary": scraped_data["summary"],
-                "sections": ", ".join(scraped_data["sections"]),
-                "key_entities": json.dumps(scraped_data["key_entities"]),
-                "full_text": scraped_data["full_text"][:10000]  # Limit text length for API
-            }
+            print(f"Attempting with model: {model_name}")
+            url = f"https://generativelanguage.googleapis.com/v1beta/models/{model_name}:generateContent?key={api_key}"
+            
+            response = requests.post(url, json=request_body, timeout=60)
+            
+            if response.status_code != 200:
+                # If json mode not supported (older models), try without config
+                if response.status_code == 400 and "response_mime_type" in response.text:
+                    print(f"Model {model_name} doesn't support JSON mode, retrying without...")
+                    del request_body["generationConfig"]["response_mime_type"]
+                    response = requests.post(url, json=request_body, timeout=60)
+            
+            if response.status_code != 200:
+                raise Exception(f"API Error {response.status_code}: {response.text}")
 
-            # Create a new chain with the current model
-            llm_instance = get_llm(model_name)
-            chain = quiz_prompt | llm_instance
-            result = chain.invoke(input_data)
+            result = response.json()
             
-            # If we get here, the model worked, break out of the loop
-            break
-            
+            # Extract text from response
+            try:
+                content = result['candidates'][0]['content']['parts'][0]['text']
+                break # Success
+            except (KeyError, IndexError) as e:
+                raise Exception(f"Unexpected response format: {str(e)}")
+
         except Exception as e:
-            error_msg = str(e)
             last_error = e
-            tried_models.append(f"{model_name}: {error_msg[:100]}")
-            # If it's a quota/availability/not found issue, try next model
-            if "RESOURCE_EXHAUSTED" in error_msg or "429" in error_msg or "NOT_FOUND" in error_msg or "404" in error_msg or "not found" in error_msg.lower():
-                print(f"Model {model_name} failed ({error_msg[:80]}), trying next model...")
-                continue
-            else:
-                # For other errors, raise immediately
-                raise
-    
-    # If all models failed, fall back to sample data if available
-    if last_error:
+            print(f"Model {model_name} failed: {str(e)[:100]}")
+            continue
+
+    # If all failed
+    if not content:
         if SAMPLE_QUIZ_DATA:
-            print("WARNING: All models failed. Falling back to sample data for demonstration.")
+            print("WARNING: All models failed. Falling back to sample data.")
             return {
                 "title": scraped_data["title"],
                 "summary": scraped_data["summary"],
@@ -173,66 +183,27 @@ def generate_quiz_data(scraped_data):
                 "related_topics": SAMPLE_QUIZ_DATA.get("related_topics", [])
             }
         else:
-            # If no sample data, raise the error
-            error_msg = str(last_error)
-            if "RESOURCE_EXHAUSTED" in error_msg or "429" in error_msg or "quota" in error_msg.lower():
-                raise ValueError(
-                    "API quota exceeded. This usually means:\n"
-                    "1. You've reached your daily free tier limit (wait 24 hours)\n"
-                    "2. You've made too many requests too quickly (wait a few minutes)\n"
-                    "3. Check your quota at: https://ai.dev/rate-limit\n\n"
-                    "Please try again later or upgrade your API plan."
-                )
-            elif "NOT_FOUND" in error_msg or "404" in error_msg or "not found" in error_msg.lower():
-                models_tried_str = "\n".join(tried_models) if tried_models else "No models tried"
-                raise ValueError(
-                    f"None of the available models worked. Tried {len(tried_models)} models.\n\n"
-                    "Likely Cause: API not enabled or packages need updating.\n"
-                    "Solutions:\n"
-                    "1. ENABLE API: https://console.cloud.google.com/apis/library/generativelanguage.googleapis.com\n"
-                    "2. Update packages: cd backend && venv\\Scripts\\activate && pip install --upgrade langchain-google-genai google-generativeai\n"
-                    "3. Verify API Key: https://aistudio.google.com/app/apikey\n"
-                    "4. Check status: Visit http://localhost:8000/api-status\n"
-                    f"Models tried: {models_tried_str[:200]}..."
-                )
-            else:
-                raise ValueError(f"Failed to generate quiz: {error_msg}")
+            raise ValueError(f"Failed to generate quiz with any model. Last error: {last_error}")
 
-    # Extract content from the response (LangChain returns a message object)
-    if hasattr(result, 'content'):
-        content = result.content
-    elif isinstance(result, str):
-        content = result
-    else:
-        content = str(result)
+    # Clean up content
+    content = content.replace("```json", "").replace("```", "").strip()
 
-    # Clean up the content - remove markdown code blocks if present
-    content = content.strip()
-    if content.startswith("```json"):
-        content = content[7:]  # Remove ```json
-    elif content.startswith("```"):
-        content = content[3:]   # Remove ```
-    if content.endswith("```"):
-        content = content[:-3]  # Remove closing ```
-    content = content.strip()
-
-    # Parse the JSON response
+    # Parse JSON
     try:
         quiz_data = json.loads(content)
     except json.JSONDecodeError as e:
-        # Try to extract JSON from the response if it's embedded in text
+        # Try to extract JSON if embedded
         json_match = re.search(r'\{.*\}', content, re.DOTALL)
         if json_match:
             quiz_data = json.loads(json_match.group())
         else:
-            raise ValueError(f"Failed to parse JSON from LLM response: {str(e)}\nResponse content: {content[:500]}")
+            raise ValueError(f"Failed to parse JSON from response: {content[:200]}...")
 
-    # Add the structured data to match the API output
     return {
         "title": scraped_data["title"],
         "summary": scraped_data["summary"],
         "key_entities": scraped_data["key_entities"],
         "sections": scraped_data["sections"],
-        "quiz": quiz_data["quiz"],
-        "related_topics": quiz_data["related_topics"]
+        "quiz": quiz_data.get("quiz", []),
+        "related_topics": quiz_data.get("related_topics", [])
     }

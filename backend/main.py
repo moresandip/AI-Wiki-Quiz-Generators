@@ -1,11 +1,15 @@
+from typing import Any
 from fastapi import FastAPI, HTTPException, Depends
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
-from sqlalchemy.orm import Session
-from database import get_db
+try:
+    from sqlalchemy.orm import Session
+except ImportError:
+    Session = None
+from database import get_db, SQL_AVAILABLE
 from models import Quiz
 from schemas import QuizRequest, QuizResponse
-from scraper import scrape_wikipedia
+from scraper import scrape_wikipedia, search_wikipedia
 from llm import generate_quiz_data
 import json
 import os
@@ -72,16 +76,29 @@ async def api_status():
     }
 
 @app.post("/generate-quiz", response_model=QuizResponse)
-async def generate_quiz(request: QuizRequest, db: Session = Depends(get_db)):
+async def generate_quiz(request: QuizRequest, db: Any = Depends(get_db)):
+    # Validate request
+    if not request.url and not request.topic:
+        raise HTTPException(status_code=400, detail="Either 'url' or 'topic' must be provided")
+
+    # Resolve topic to URL if needed
+    target_url = request.url
+    if not target_url and request.topic:
+        try:
+            target_url = search_wikipedia(request.topic)
+        except Exception as e:
+            raise HTTPException(status_code=404, detail=str(e))
+
     # Check if URL already exists (only if database is available)
-    if db:
-        existing_quiz = db.query(Quiz).filter(Quiz.url == request.url).first()
-        if existing_quiz:
-            return QuizResponse.from_orm(existing_quiz)
+    if Session and db:
+        if SQL_AVAILABLE and isinstance(db, Session):
+            existing_quiz = db.query(Quiz).filter(Quiz.url == target_url).first()
+            if existing_quiz:
+                return QuizResponse.from_orm(existing_quiz)
 
     try:
         # Scrape the Wikipedia page
-        scraped_data = scrape_wikipedia(request.url)
+        scraped_data = scrape_wikipedia(target_url)
 
         # Generate quiz using LLM
         quiz_data = generate_quiz_data(scraped_data)
@@ -89,7 +106,7 @@ async def generate_quiz(request: QuizRequest, db: Session = Depends(get_db)):
         # Create quiz response - ensure title and summary are at top level for consistency
         quiz_response = QuizResponse(
             id=1,  # Dummy ID since not saved to DB
-            url=request.url,
+            url=target_url,
             title=quiz_data.get("title") or scraped_data.get("title"),
             summary=quiz_data.get("summary") or scraped_data.get("summary"),
             data=quiz_data,
@@ -97,32 +114,33 @@ async def generate_quiz(request: QuizRequest, db: Session = Depends(get_db)):
         )
 
         # Save to database if available
-        if db:
-            new_quiz = Quiz(
-                url=request.url,
-                title=scraped_data.get("title"),
-                summary=scraped_data.get("summary"),
-                data=quiz_data
-            )
-            db.add(new_quiz)
-            db.commit()
-            db.refresh(new_quiz)
-            quiz_response = QuizResponse.from_orm(new_quiz)
+        if Session and db and SQL_AVAILABLE:
+            if isinstance(db, Session):
+                new_quiz = Quiz(
+                    url=target_url,
+                    title=scraped_data.get("title"),
+                    summary=scraped_data.get("summary"),
+                    data=quiz_data
+                )
+                db.add(new_quiz)
+                db.commit()
+                db.refresh(new_quiz)
+                quiz_response = QuizResponse.from_orm(new_quiz)
 
         return quiz_response
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error generating quiz: {str(e)}")
 
 @app.get("/quizzes", response_model=list[QuizResponse])
-async def get_quizzes(db: Session = Depends(get_db)):
-    if not db:
+async def get_quizzes(db: Any = Depends(get_db)):
+    if not (Session and db and isinstance(db, Session)):
         return []
     quizzes = db.query(Quiz).all()
     return [QuizResponse.from_orm(quiz) for quiz in quizzes]
 
 @app.get("/quiz/{quiz_id}", response_model=QuizResponse)
-async def get_quiz(quiz_id: int, db: Session = Depends(get_db)):
-    if not db:
+async def get_quiz(quiz_id: int, db: Any = Depends(get_db)):
+    if not (Session and db and isinstance(db, Session)):
         raise HTTPException(status_code=404, detail="Database not configured")
     quiz = db.query(Quiz).filter(Quiz.id == quiz_id).first()
     if not quiz:

@@ -9,7 +9,7 @@ except ImportError:
 from database import get_db, SQL_AVAILABLE
 from models import Quiz
 from schemas import QuizRequest, QuizResponse, SaveResultsRequest
-from scraper import scrape_wikipedia, search_wikipedia
+from scraper import scrape_wikipedia
 from llm import generate_quiz_data
 import json
 import os
@@ -78,16 +78,10 @@ async def api_status():
 @app.post("/generate-quiz", response_model=QuizResponse)
 async def generate_quiz(request: QuizRequest, db: Any = Depends(get_db)):
     # Validate request
-    if not request.url and not request.topic:
-        raise HTTPException(status_code=400, detail="Either 'url' or 'topic' must be provided")
+    if not request.url or "wikipedia.org" not in request.url:
+        raise HTTPException(status_code=400, detail="A valid Wikipedia URL must be provided")
 
-    # Resolve topic to URL if needed
     target_url = request.url
-    if not target_url and request.topic:
-        try:
-            target_url = search_wikipedia(request.topic)
-        except Exception as e:
-            raise HTTPException(status_code=404, detail=str(e))
 
     # Removed caching check to ensure fresh questions every time as requested
     # if Session and db:

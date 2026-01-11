@@ -74,8 +74,8 @@ function App() {
   };
 
   const handleGenerate = async () => {
-    if (!inputValue.trim()) {
-      setError('Please enter a Topic or Wikipedia URL');
+    if (!inputValue.trim() || !inputValue.includes('wikipedia.org')) {
+      setError('Please enter a valid Wikipedia URL');
       return;
     }
 
@@ -94,11 +94,7 @@ function App() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(
-          inputValue.includes('wikipedia.org')
-            ? { url: inputValue }
-            : { topic: inputValue }
-        ),
+        body: JSON.stringify({ url: inputValue }),
       });
 
       if (!response.ok) {
@@ -275,7 +271,7 @@ function App() {
 
             <input
               type="text"
-              placeholder="Enter a Topic or Paste Wikipedia URL..."
+              placeholder="Paste Wikipedia URL..."
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               disabled={loading}

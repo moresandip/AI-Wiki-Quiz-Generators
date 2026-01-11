@@ -3,8 +3,7 @@ from typing import List, Optional, Dict, Any
 from datetime import datetime
 
 class QuizRequest(BaseModel):
-    url: Optional[str] = None
-    topic: Optional[str] = None
+    url: str
 
 class SaveResultsRequest(BaseModel):
     user_answers: Dict[str, Any]

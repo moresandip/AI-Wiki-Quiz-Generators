@@ -1,0 +1,8 @@
+Starting test_db_connection.py
+Loaded dotenv
+Imported database. SQL_AVAILABLE: True
+Database URL: None
+Tables created (or exist).
+Session created.
+Successfully inserted quiz with ID: 1
+Successfully deleted test quiz.

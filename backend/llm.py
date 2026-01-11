@@ -108,11 +108,14 @@ def generate_quiz_data(scraped_data):
          raise ValueError("GOOGLE_API_KEY environment variable is not set")
 
     # Models to try (REST API endpoint format) - Prioritize Flash for speed
+    # Models to try (REST API endpoint format) - Prioritize Flash for speed
     models_to_try = [
+        "gemini-2.5-flash",
+        "gemini-2.0-flash",
+        "gemini-2.0-flash-exp",
+        "gemini-flash-latest",
         "gemini-1.5-flash",
-        "gemini-2.0-flash-exp", # Very fast experimental model
-        "gemini-1.5-pro",
-        "gemini-pro"
+        "gemini-1.5-pro"
     ]
     
     last_error = None
@@ -171,18 +174,18 @@ def generate_quiz_data(scraped_data):
 
     # If all failed
     if not content:
-        if SAMPLE_QUIZ_DATA:
-            print("WARNING: All models failed. Falling back to sample data.")
-            return {
-                "title": scraped_data["title"],
-                "summary": scraped_data["summary"],
-                "key_entities": scraped_data["key_entities"],
-                "sections": scraped_data["sections"],
-                "quiz": SAMPLE_QUIZ_DATA["quiz"],
-                "related_topics": SAMPLE_QUIZ_DATA.get("related_topics", [])
-            }
-        else:
-            raise ValueError(f"Failed to generate quiz with any model. Last error: {last_error}")
+        # if SAMPLE_QUIZ_DATA:
+        #     print("WARNING: All models failed. Falling back to sample data.")
+        #     return {
+        #         "title": scraped_data["title"],
+        #         "summary": scraped_data["summary"],
+        #         "key_entities": scraped_data["key_entities"],
+        #         "sections": scraped_data["sections"],
+        #         "quiz": SAMPLE_QUIZ_DATA["quiz"],
+        #         "related_topics": SAMPLE_QUIZ_DATA.get("related_topics", [])
+        #     }
+        # else:
+        raise ValueError(f"Failed to generate quiz with any model. Last error: {last_error}")
 
     # Clean up content
     content = content.replace("```json", "").replace("```", "").strip()

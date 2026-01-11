@@ -8,7 +8,7 @@ except ImportError:
     Session = None
 from database import get_db, SQL_AVAILABLE
 from models import Quiz
-from schemas import QuizRequest, QuizResponse
+from schemas import QuizRequest, QuizResponse, SaveResultsRequest
 from scraper import scrape_wikipedia, search_wikipedia
 from llm import generate_quiz_data
 import json
@@ -159,3 +159,18 @@ async def delete_quiz(quiz_id: int, db: Any = Depends(get_db)):
     db.delete(quiz)
     db.commit()
     return {"message": "Quiz deleted successfully"}
+
+@app.put("/quiz/{quiz_id}/save-results")
+async def save_quiz_results(quiz_id: int, request: SaveResultsRequest, db: Any = Depends(get_db)):
+    if not (Session and db and isinstance(db, Session)):
+         raise HTTPException(status_code=503, detail="Database not configured")
+    
+    quiz = db.query(Quiz).filter(Quiz.id == quiz_id).first()
+    if not quiz:
+        raise HTTPException(status_code=404, detail="Quiz not found")
+    
+    # Update user answers
+    quiz.user_answers = request.user_answers
+    db.commit()
+    
+    return {"message": "Quiz results saved successfully"}

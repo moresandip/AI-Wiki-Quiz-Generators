@@ -6,6 +6,9 @@ class QuizRequest(BaseModel):
     url: Optional[str] = None
     topic: Optional[str] = None
 
+class SaveResultsRequest(BaseModel):
+    user_answers: Dict[str, Any]
+
 class QuizResponse(BaseModel):
     id: int
     url: str

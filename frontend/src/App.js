@@ -180,6 +180,32 @@ function App() {
     setError(null);
   };
 
+  const handleSaveProgress = async () => {
+    if (!quizData || !quizData.id || Object.keys(userAnswers).length === 0) return;
+
+    try {
+      const isProduction = process.env.NODE_ENV === 'production';
+      const apiUrl = isProduction ? `/api/quiz/${quizData.id}/save-results` : `http://localhost:8000/quiz/${quizData.id}/save-results`;
+
+      const response = await fetch(apiUrl, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ user_answers: userAnswers }),
+      });
+
+      if (response.ok) {
+        alert('Progress saved successfully!');
+      } else {
+        alert('Failed to save progress');
+      }
+    } catch (err) {
+      console.error('Error saving progress:', err);
+      alert('Error saving progress');
+    }
+  };
+
   return (
     <div className="App">
       <header className="App-header">
@@ -284,20 +310,37 @@ function App() {
             </div>
 
             {!showResults ? (
-              <button
-                onClick={handleSubmit}
-                className="submit-btn"
-                disabled={Object.keys(userAnswers).length !== quizData.data.quiz.length}
-              >
-                Submit Answers
-              </button>
+              <div className="progress-actions">
+                <button
+                  onClick={handleSaveProgress}
+                  className="save-progress-btn"
+                  disabled={!quizData.id || Object.keys(userAnswers).length === 0}
+                >
+                  Save Progress
+                </button>
+                <button
+                  onClick={handleSubmit}
+                  className="submit-btn"
+                  disabled={Object.keys(userAnswers).length !== quizData.data.quiz.length}
+                >
+                  Submit Answers
+                </button>
+              </div>
             ) : (
               <div className="results-summary">
                 <h3>Quiz Complete!</h3>
                 <p className="score-display">
                   You scored <strong>{calculateScore()}</strong> out of <strong>{quizData.data.quiz.length}</strong>
                 </p>
-                <button onClick={resetQuiz} className="reset-btn large">Try Another Article</button>
+                <div className="results-actions">
+                  <button onClick={handleSaveQuiz} className="save-btn" disabled={!quizData.id}>
+                    Save Results
+                  </button>
+                  <button onClick={() => deleteCurrentQuiz(quizData.id)} className="delete-btn" disabled={!quizData.id}>
+                    Delete Quiz
+                  </button>
+                  <button onClick={resetQuiz} className="reset-btn large">Try Another Article</button>
+                </div>
               </div>
             )}
 

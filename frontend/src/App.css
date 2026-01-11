@@ -397,6 +397,33 @@ body {
   cursor: not-allowed;
 }
 
+.progress-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.save-progress-btn {
+  background-color: #2196F3;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  font-size: 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.save-progress-btn:hover:not(:disabled) {
+  background-color: #1976D2;
+}
+
+.save-progress-btn:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
 .results-summary {
   text-align: center;
   background: var(--card-background);

@@ -100,6 +100,14 @@ body {
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.2s;
+  position: relative;
+}
+
+.history-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
 }
 
 .history-card:hover {
@@ -108,10 +116,28 @@ body {
   transform: translateX(4px);
 }
 
+.delete-history-btn {
+  background: transparent;
+  border: none;
+  color: #9ca3af;
+  font-size: 1.5rem;
+  line-height: 1;
+  padding: 0 0.5rem;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.delete-history-btn:hover {
+  color: var(--error-color);
+  background-color: #fee2e2;
+}
+
 .history-card h3 {
   margin: 0 0 0.5rem 0;
   font-size: 1.1rem;
   color: var(--text-primary);
+  flex: 1;
 }
 
 .history-card p {

@@ -64,8 +64,9 @@ Key Entities: {key_entities}
 Full Text: {full_text}
 
 Instructions:
-1. Generate 5-10 multiple-choice questions.
-2. Questions must be factually correct and directly answerable from the text provided above. Do not hallucinate or use outside knowledge.
+1. Generate 5-10 multiple-choice questions. 
+2. **IMPORTANT**: Focus on different aspects of the article than typical generic questions.
+3. Questions must be factually correct and directly answerable from the text provided above. Do not hallucinate or use outside knowledge.
 3. Each question must have 4 options (A, B, C, D).
 4. The 'answer' field MUST BE AN EXACT STRING MATCH to one of the options.
 5. Provide a short, clear explanation for why the answer is correct, citing the context if possible.

@@ -89,12 +89,12 @@ async def generate_quiz(request: QuizRequest, db: Any = Depends(get_db)):
         except Exception as e:
             raise HTTPException(status_code=404, detail=str(e))
 
-    # Check if URL already exists (only if database is available)
-    if Session and db:
-        if SQL_AVAILABLE and isinstance(db, Session):
-            existing_quiz = db.query(Quiz).filter(Quiz.url == target_url).first()
-            if existing_quiz:
-                return QuizResponse.from_orm(existing_quiz)
+    # Removed caching check to ensure fresh questions every time as requested
+    # if Session and db:
+    #     if SQL_AVAILABLE and isinstance(db, Session):
+    #         existing_quiz = db.query(Quiz).filter(Quiz.url == target_url).first()
+    #         if existing_quiz:
+    #             return QuizResponse.from_orm(existing_quiz)
 
     try:
         # Scrape the Wikipedia page
@@ -146,3 +146,16 @@ async def get_quiz(quiz_id: int, db: Any = Depends(get_db)):
     if not quiz:
         raise HTTPException(status_code=404, detail="Quiz not found")
     return QuizResponse.from_orm(quiz)
+
+@app.delete("/quiz/{quiz_id}")
+async def delete_quiz(quiz_id: int, db: Any = Depends(get_db)):
+    if not (Session and db and isinstance(db, Session)):
+         raise HTTPException(status_code=503, detail="Database not configured")
+    
+    quiz = db.query(Quiz).filter(Quiz.id == quiz_id).first()
+    if not quiz:
+        raise HTTPException(status_code=404, detail="Quiz not found")
+    
+    db.delete(quiz)
+    db.commit()
+    return {"message": "Quiz deleted successfully"}

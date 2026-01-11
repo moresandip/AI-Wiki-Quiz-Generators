@@ -37,6 +37,27 @@ function App() {
     setError(null);
   };
 
+  const deleteQuiz = async (e, quizId) => {
+    e.stopPropagation(); // Prevent loading the quiz
+    if (!window.confirm("Are you sure you want to delete this quiz?")) return;
+
+    try {
+      const isProduction = process.env.NODE_ENV === 'production';
+      const apiUrl = isProduction ? `/api/quiz/${quizId}` : `http://localhost:8000/quiz/${quizId}`;
+
+      const response = await fetch(apiUrl, { method: 'DELETE' });
+
+      if (response.ok) {
+        setHistory(history.filter(q => q.id !== quizId));
+      } else {
+        alert("Failed to delete quiz");
+      }
+    } catch (err) {
+      console.error("Error deleting quiz:", err);
+      alert("Error deleting quiz");
+    }
+  };
+
   const handleGenerate = async () => {
     if (!inputValue.trim()) {
       setError('Please enter a Topic or Wikipedia URL');
@@ -131,7 +152,16 @@ function App() {
               <div className="history-list">
                 {history.map((quiz) => (
                   <div key={quiz.id} className="history-card" onClick={() => loadQuizFromHistory(quiz)}>
-                    <h3>{quiz.title || quiz.url}</h3>
+                    <div className="history-card-header">
+                      <h3>{quiz.title || quiz.url}</h3>
+                      <button
+                        className="delete-history-btn"
+                        onClick={(e) => deleteQuiz(e, quiz.id)}
+                        title="Delete Quiz"
+                      >
+                        ×
+                      </button>
+                    </div>
                     <p>{new Date(quiz.created_at).toLocaleDateString()}</p>
                   </div>
                 ))}

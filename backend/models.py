@@ -9,7 +9,7 @@ if SQL_AVAILABLE:
         __tablename__ = "quizzes"
 
         id = Column(Integer, primary_key=True, index=True)
-        url = Column(String, unique=True, index=True, nullable=False)
+        url = Column(String, unique=False, index=True, nullable=False)
         title = Column(String, nullable=True)
         summary = Column(Text, nullable=True)
         # Stores the full JSON response (quiz questions, related topics, entities, etc.)

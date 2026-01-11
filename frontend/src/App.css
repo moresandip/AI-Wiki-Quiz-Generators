@@ -467,6 +467,22 @@ body {
   background-color: #059669;
 }
 
+.delete-btn {
+  background-color: var(--error-color);
+  color: white;
+  padding: 1rem;
+  border: none;
+  border-radius: var(--border-radius);
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.delete-btn:hover:not(:disabled) {
+  background-color: #dc2626;
+}
+
 .related-topics {
   margin-top: 2rem;
   text-align: center;

@@ -151,6 +151,27 @@ function App() {
     }
   };
 
+  const deleteCurrentQuiz = async (quizId) => {
+    if (!window.confirm("Are you sure you want to delete this quiz?")) return;
+
+    try {
+      const isProduction = process.env.NODE_ENV === 'production';
+      const apiUrl = isProduction ? `/api/quiz/${quizId}` : `http://localhost:8000/quiz/${quizId}`;
+
+      const response = await fetch(apiUrl, { method: 'DELETE' });
+
+      if (response.ok) {
+        resetQuiz();
+        fetchHistory(); // Refresh history
+      } else {
+        alert("Failed to delete quiz");
+      }
+    } catch (err) {
+      console.error("Error deleting quiz:", err);
+      alert("Error deleting quiz");
+    }
+  };
+
   const resetQuiz = () => {
     setInputValue('');
     setQuizData(null);

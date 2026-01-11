@@ -1,0 +1,11 @@
+{
+    "name": "ai-wiki-quiz-generator",
+    "version": "1.0.0",
+    "scripts": {
+        "build": "cd frontend && npm run build",
+        "postinstall": "cd frontend && npm install"
+    },
+    "engines": {
+        "node": "18.x"
+    }
+}

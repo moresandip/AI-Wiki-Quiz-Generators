@@ -21,8 +21,11 @@ function App() {
     setUserAnswers({});
     setShowResults(false);
 
+    const isProduction = process.env.NODE_ENV === 'production';
+    const apiUrl = isProduction ? '/api/generate-quiz' : 'http://localhost:8000/generate-quiz';
+
     try {
-      const response = await fetch('http://localhost:8000/generate-quiz', {
+      const response = await fetch(apiUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

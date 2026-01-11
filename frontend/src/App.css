@@ -406,6 +406,28 @@ body {
   animation: slideUp 0.5s ease-out;
 }
 
+.results-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.results-actions button {
+  width: 100%;
+}
+
+@media (min-width: 640px) {
+  .results-actions {
+    flex-direction: row;
+    justify-content: center;
+  }
+
+  .results-actions button {
+    width: auto;
+  }
+}
+
 @keyframes slideUp {
   from {
     opacity: 0;
@@ -427,6 +449,22 @@ body {
   width: 100%;
   padding: 1rem;
   font-size: 1.1rem;
+}
+
+.save-btn {
+  background-color: var(--secondary-color);
+  color: white;
+  padding: 1rem;
+  border: none;
+  border-radius: var(--border-radius);
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.save-btn:hover:not(:disabled) {
+  background-color: #059669;
 }
 
 .related-topics {

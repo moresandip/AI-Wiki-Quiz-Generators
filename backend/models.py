@@ -14,6 +14,7 @@ if SQL_AVAILABLE:
         summary = Column(Text, nullable=True)
         # Stores the full JSON response (quiz questions, related topics, entities, etc.)
         data = Column(JSON, nullable=False)
+        user_answers = Column(JSON, nullable=True)  # Store user answers as JSON
         created_at = Column(DateTime(timezone=True), server_default=func.now())
 else:
     # Dummy class to prevent import errors if SQL is not available

@@ -12,6 +12,7 @@ class QuizResponse(BaseModel):
     title: Optional[str] = None
     summary: Optional[str] = None
     data: Dict[str, Any]  # The structured quiz data
+    user_answers: Optional[Dict[str, Any]] = None  # User answers as JSON
     created_at: datetime
 
     class Config:

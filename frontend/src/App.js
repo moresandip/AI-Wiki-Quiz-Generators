@@ -31,8 +31,8 @@ function App() {
 
   const loadQuizFromHistory = (quiz) => {
     setQuizData(quiz);
-    setUserAnswers({});
-    setShowResults(false);
+    setUserAnswers(quiz.user_answers || {});
+    setShowResults(!!quiz.user_answers && Object.keys(quiz.user_answers).length > 0);
     setShowHistory(false);
     setError(null);
   };
@@ -122,6 +122,33 @@ function App() {
 
   const handleSubmit = () => {
     setShowResults(true);
+  };
+
+  const handleSaveQuiz = async () => {
+    if (!quizData || !quizData.id) return;
+
+    try {
+      const isProduction = process.env.NODE_ENV === 'production';
+      const apiUrl = isProduction ? `/api/quiz/${quizData.id}/save-results` : `http://localhost:8000/quiz/${quizData.id}/save-results`;
+
+      const response = await fetch(apiUrl, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ user_answers: userAnswers }),
+      });
+
+      if (response.ok) {
+        alert('Quiz results saved successfully!');
+        fetchHistory(); // Refresh history to show saved status
+      } else {
+        alert('Failed to save quiz results');
+      }
+    } catch (err) {
+      console.error('Error saving quiz:', err);
+      alert('Error saving quiz results');
+    }
   };
 
   const resetQuiz = () => {

@@ -3,7 +3,15 @@ import re
 import json
 import requests
 from dotenv import load_dotenv
+import datetime
 
+def log_to_file(message):
+    try:
+        with open("debug_log.txt", "a", encoding="utf-8") as f:
+            timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            f.write(f"[{timestamp}] [LLM] {message}\n")
+    except Exception:
+        pass
 # Load sample data as fallback
 SAMPLE_DATA_PATH = os.path.join(os.path.dirname(__file__), '..', 'sample_data', 'sample_output.json')
 try:
@@ -96,15 +104,15 @@ def generate_quiz_data(scraped_data):
     api_key = os.getenv("GOOGLE_API_KEY")
     if not api_key:
          # Fallback to sample if no key (dev mode) or raise error
-         if SAMPLE_QUIZ_DATA:
-            return {
-                "title": scraped_data["title"],
-                "summary": scraped_data["summary"],
-                "key_entities": scraped_data["key_entities"],
-                "sections": scraped_data["sections"],
-                "quiz": SAMPLE_QUIZ_DATA["quiz"],
-                "related_topics": SAMPLE_QUIZ_DATA.get("related_topics", [])
-            }
+         # if SAMPLE_QUIZ_DATA:
+         #    return {
+         #        "title": scraped_data["title"],
+         #        "summary": scraped_data["summary"],
+         #        "key_entities": scraped_data["key_entities"],
+         #        "sections": scraped_data["sections"],
+         #        "quiz": SAMPLE_QUIZ_DATA["quiz"],
+         #        "related_topics": SAMPLE_QUIZ_DATA.get("related_topics", [])
+         #    }
          raise ValueError("GOOGLE_API_KEY environment variable is not set")
 
     # Models to try (REST API endpoint format) - Prioritize Flash for speed
@@ -112,13 +120,12 @@ def generate_quiz_data(scraped_data):
     models_to_try = [
         "gemini-2.5-flash",
         "gemini-2.0-flash",
-        "gemini-2.0-flash-exp",
-        "gemini-flash-latest",
         "gemini-1.5-flash",
         "gemini-1.5-pro"
     ]
     
     last_error = None
+    log_to_file(f"Generating quiz for: {scraped_data.get('title')}")
     
     # Format the prompt
     prompt_text = QUIZ_PROMPT_TEMPLATE.format(
@@ -169,6 +176,7 @@ def generate_quiz_data(scraped_data):
 
         except Exception as e:
             last_error = e
+            log_to_file(f"Model {model_name} failed: {str(e)}")
             print(f"Model {model_name} failed: {str(e)[:100]}")
             continue
 

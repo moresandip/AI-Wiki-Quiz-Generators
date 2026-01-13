@@ -13,11 +13,20 @@ from scraper import scrape_wikipedia
 from llm import generate_quiz_data
 import json
 import os
+import traceback
 from datetime import datetime
 from dotenv import load_dotenv
 
 # Load environment variables from .env file
 load_dotenv()
+
+def log_to_file(message):
+    try:
+        with open("debug_log.txt", "a", encoding="utf-8") as f:
+            timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            f.write(f"[{timestamp}] {message}\n")
+    except Exception as e:
+        print(f"Failed to write to log: {e}")
 
 app = FastAPI(title="AI Wiki Quiz Generator", version="1.0.0")
 
@@ -91,11 +100,17 @@ async def generate_quiz(request: QuizRequest, db: Any = Depends(get_db)):
     #             return QuizResponse.from_orm(existing_quiz)
 
     try:
+        log_to_file(f"Received quiz generation request for URL: {target_url}")
+        
         # Scrape the Wikipedia page
+        log_to_file("Starting scrape...")
         scraped_data = scrape_wikipedia(target_url)
+        log_to_file(f"Scrape successful. Title: {scraped_data.get('title')}")
 
         # Generate quiz using LLM
+        log_to_file("Starting LLM generation...")
         quiz_data = generate_quiz_data(scraped_data)
+        log_to_file("LLM generation successful.")
 
         # Create quiz response - ensure title and summary are at top level for consistency
         quiz_response = QuizResponse(
@@ -110,19 +125,41 @@ async def generate_quiz(request: QuizRequest, db: Any = Depends(get_db)):
         # Save to database if available
         if Session and db and SQL_AVAILABLE:
             if isinstance(db, Session):
-                new_quiz = Quiz(
-                    url=target_url,
-                    title=scraped_data.get("title"),
-                    summary=scraped_data.get("summary"),
-                    data=quiz_data
-                )
-                db.add(new_quiz)
-                db.commit()
-                db.refresh(new_quiz)
-                quiz_response = QuizResponse.from_orm(new_quiz)
+                # Check for existing quiz
+                existing_quiz = db.query(Quiz).filter(Quiz.url == target_url).first()
+                
+                if existing_quiz:
+                    log_to_file(f"Updating existing quiz for URL: {target_url}")
+                    existing_quiz.title = scraped_data.get("title")
+                    existing_quiz.summary = scraped_data.get("summary")
+                    existing_quiz.data = quiz_data
+                    existing_quiz.created_at = datetime.now()
+                    # Reset user answers on regeneration
+                    existing_quiz.user_answers = {} 
+                    
+                    db.commit()
+                    db.refresh(existing_quiz)
+                    quiz_response = QuizResponse.from_orm(existing_quiz)
+                    log_to_file(f"Updated quiz ID: {existing_quiz.id}")
+                else:
+                    log_to_file(f"Creating new quiz for URL: {target_url}")
+                    new_quiz = Quiz(
+                        url=target_url,
+                        title=scraped_data.get("title"),
+                        summary=scraped_data.get("summary"),
+                        data=quiz_data
+                    )
+                    db.add(new_quiz)
+                    db.commit()
+                    db.refresh(new_quiz)
+                    quiz_response = QuizResponse.from_orm(new_quiz)
+                    log_to_file(f"Saved quiz to DB with ID: {new_quiz.id}")
 
         return quiz_response
     except Exception as e:
+        error_msg = f"Error generating quiz: {str(e)}\n{traceback.format_exc()}"
+        log_to_file(error_msg)
+        print(error_msg)
         raise HTTPException(status_code=500, detail=f"Error generating quiz: {str(e)}")
 
 @app.get("/quizzes", response_model=list[QuizResponse])

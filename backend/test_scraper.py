@@ -8,7 +8,7 @@ def test_scraper():
         data = scrape_wikipedia(url)
         print("\nScraping Successful!")
         print(f"Title: {data['title']}")
-        print(f"Summary: {data['summary'][:100]}...")
+        print(f"Summary: {data['summary'][:100].encode('utf-8', errors='ignore').decode('utf-8')}...")
         print(f"Sections found: {len(data['sections'])}")
         print(f"Entities found: {len(data['key_entities']['people'])} people")
         

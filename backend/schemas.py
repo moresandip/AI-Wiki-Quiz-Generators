@@ -17,5 +17,6 @@ class QuizResponse(BaseModel):
     user_answers: Optional[Dict[str, Any]] = None  # User answers as JSON
     created_at: datetime
 
-    class Config:
-        orm_mode = True
+    model_config = {
+        "from_attributes": True
+    }

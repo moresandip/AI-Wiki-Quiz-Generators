@@ -4,7 +4,15 @@ import re
 import time
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
+import datetime
 
+def log_to_file(message):
+    try:
+        with open("debug_log.txt", "a", encoding="utf-8") as f:
+            timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            f.write(f"[{timestamp}] [SCRAPER] {message}\n")
+    except Exception:
+        pass
 def create_session_with_retries():
     """Create a requests session with retry strategy"""
     session = requests.Session()
@@ -26,6 +34,8 @@ def scrape_wikipedia(url: str) -> dict:
     """
     max_retries = 3
     retry_delay = 2  # seconds
+    
+    log_to_file(f"Scraping URL: {url}")
     
     for attempt in range(max_retries):
         try:

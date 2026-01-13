@@ -115,26 +115,35 @@ def generate_quiz_data(scraped_data):
          #    }
          raise ValueError("GOOGLE_API_KEY environment variable is not set")
 
-    # Dynamically fetch available models to avoid 404s
+    # Dynamically fetch available models
     available_models = list_available_models()
     
-    # Blacklist models known to cause 404s or other issues
-    BLACKLIST = ["gemini-1.5-pro", "gemini-1.0-pro"]
+    models_to_try = []
     
     if available_models:
-        # Filter out blacklisted models
-        available_models = [m for m in available_models if m not in BLACKLIST]
-        # Prioritize flash models if available
-        models_to_try = sorted(available_models, key=lambda x: 'flash' not in x)
-        log_to_file(f"Using dynamically fetched models: {models_to_try[:3]}...")
-    else:
-        # Fallback if listing fails
-        models_to_try = [
-            "gemini-2.5-flash",
+        # 1. Prioritize known stable high-performance models
+        PRIORITY_MODELS = [
             "gemini-2.0-flash",
-            "gemini-flash-latest",
-            "gemini-pro-latest"
+            "gemini-1.5-flash",
+            "gemini-flash-latest"
         ]
+        
+        for pm in PRIORITY_MODELS:
+            if pm in available_models:
+                models_to_try.append(pm)
+        
+        # 2. Add other "flash" models, excluding unstable/preview ones
+        for m in available_models:
+            if m not in models_to_try and "flash" in m:
+                # Exclude specific unstable keywords
+                if not any(bad in m for bad in ["preview", "experimental", "deep-research", "tts", "vision"]):
+                    models_to_try.append(m)
+                    
+        log_to_file(f"Selected models: {models_to_try}")
+    
+    if not models_to_try:
+        # Fallback if filtering removed everything (unlikely)
+        models_to_try = ["gemini-2.0-flash", "gemini-1.5-flash"]
         log_to_file("Using fallback model list")
     
     last_error = None
@@ -169,6 +178,12 @@ def generate_quiz_data(scraped_data):
             
             response = requests.post(url, json=request_body, timeout=60)
             
+            # CRITICAL: If 403, the key is bad. Stop trying other models.
+            if response.status_code == 403:
+                error_msg = f"API Key Error (403): {response.text}"
+                log_to_file(error_msg)
+                raise ValueError(error_msg)
+
             if response.status_code != 200:
                 # If json mode not supported (older models), try without config
                 if response.status_code == 400 and "response_mime_type" in response.text:
@@ -188,6 +203,9 @@ def generate_quiz_data(scraped_data):
             except (KeyError, IndexError) as e:
                 raise Exception(f"Unexpected response format: {str(e)}")
 
+        except ValueError as ve:
+            # Re-raise critical errors like 403
+            raise ve
         except Exception as e:
             last_error = e
             log_to_file(f"Model {model_name} failed: {str(e)}")

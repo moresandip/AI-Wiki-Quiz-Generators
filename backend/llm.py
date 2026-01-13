@@ -115,113 +115,109 @@ def generate_quiz_data(scraped_data):
          #    }
          raise ValueError("GOOGLE_API_KEY environment variable is not set")
 
-    # Hardcoded list of stable models to prevent "deep-research" or "preview" errors
-    # Dynamic fetching was picking up unstable models despite filtering.
-    models_to_try = [
-        "gemini-2.0-flash",
-        "gemini-1.5-flash"
-    ]
-    log_to_file(f"Using hardcoded stable models: {models_to_try}")
-    
-    last_error = None
-    log_to_file(f"Generating quiz for: {scraped_data.get('title')}")
-    
-    # Format the prompt
-    prompt_text = QUIZ_PROMPT_TEMPLATE.format(
-        title=scraped_data["title"],
-        summary=scraped_data["summary"],
-        sections=", ".join(scraped_data["sections"]),
-        key_entities=json.dumps(scraped_data["key_entities"]),
-        full_text=scraped_data["full_text"][:6000] # Drastically reduced for speed
-    )
+    # ... (previous code) ...
 
-    request_body = {
-        "contents": [{
-            "parts": [{"text": prompt_text}]
-        }],
-        "generationConfig": {
-            "temperature": 0.9, # Higher temperature = more variety
-            "response_mime_type": "application/json"
-        }
-    }
-
-    content = ""
-    
-    for model_name in models_to_try:
-        try:
-            print(f"Attempting with model: {model_name}")
-            # Use v1 API for better stability
-            url = f"https://generativelanguage.googleapis.com/v1/models/{model_name}:generateContent?key={api_key}"
-            
-            response = requests.post(url, json=request_body, timeout=60)
-            
-            # CRITICAL: If 403, the key is bad. Stop trying other models.
-            if response.status_code == 403:
-                error_msg = f"API Key Error (403): {response.text}"
-                log_to_file(error_msg)
-                raise ValueError(error_msg)
-
-            if response.status_code != 200:
-                # If json mode not supported (older models), try without config
-                if response.status_code == 400 and "response_mime_type" in response.text:
-                    print(f"Model {model_name} doesn't support JSON mode, retrying without...")
-                    del request_body["generationConfig"]["response_mime_type"]
-                    response = requests.post(url, json=request_body, timeout=60)
-            
-            if response.status_code != 200:
-                raise Exception(f"API Error {response.status_code}: {response.text}")
-
-            result = response.json()
-            
-            # Extract text from response
-            try:
-                content = result['candidates'][0]['content']['parts'][0]['text']
-                break # Success
-            except (KeyError, IndexError) as e:
-                raise Exception(f"Unexpected response format: {str(e)}")
-
-        except ValueError as ve:
-            # Re-raise critical errors like 403
-            raise ve
-        except Exception as e:
-            last_error = e
-            log_to_file(f"Model {model_name} failed: {str(e)}")
-            print(f"Model {model_name} failed: {str(e)[:100]}")
-            continue
-
-    # If all failed
-    if not content:
-        # if SAMPLE_QUIZ_DATA:
-        #     print("WARNING: All models failed. Falling back to sample data.")
-        #     return {
-        #         "title": scraped_data["title"],
-        #         "summary": scraped_data["summary"],
-        #         "key_entities": scraped_data["key_entities"],
-        #         "sections": scraped_data["sections"],
-        #         "quiz": SAMPLE_QUIZ_DATA["quiz"],
-        #         "related_topics": SAMPLE_QUIZ_DATA.get("related_topics", [])
-        #     }
-        # else:
-        raise ValueError(f"Failed to generate quiz with any model. Last error: {last_error}")
-
-    # Clean up content
-    content = content.replace("```json", "").replace("```", "").strip()
-
-    # Parse JSON
+    # Try to generate quiz with models
     try:
-        quiz_data = json.loads(content)
-    except json.JSONDecodeError as e:
-        # Try to extract JSON if embedded
-        json_match = re.search(r'\{.*\}', content, re.DOTALL)
-        if json_match:
-            quiz_data = json.loads(json_match.group())
-        else:
-            raise ValueError(f"Failed to parse JSON from response: {content[:200]}...")
+        # Hardcoded list of stable models
+        models_to_try = [
+            "gemini-2.0-flash",
+            "gemini-1.5-flash"
+        ]
+        log_to_file(f"Using hardcoded stable models: {models_to_try}")
+        
+        last_error = None
+        log_to_file(f"Generating quiz for: {scraped_data.get('title')}")
+        
+        # Format the prompt
+        prompt_text = QUIZ_PROMPT_TEMPLATE.format(
+            title=scraped_data["title"],
+            summary=scraped_data["summary"],
+            sections=", ".join(scraped_data["sections"]),
+            key_entities=json.dumps(scraped_data["key_entities"]),
+            full_text=scraped_data["full_text"][:6000]
+        )
 
-    return {
-        "title": scraped_data["title"],
-        "summary": scraped_data["summary"],
-        "key_entities": scraped_data["key_entities"],
-        "sections": scraped_data["sections"],
-        "quiz": quiz_data.get("quiz", [])
-    }
+        request_body = {
+            "contents": [{"parts": [{"text": prompt_text}]}],
+            "generationConfig": {
+                "temperature": 0.9,
+                "response_mime_type": "application/json"
+            }
+        }
+
+        content = ""
+        
+        for model_name in models_to_try:
+            try:
+                print(f"Attempting with model: {model_name}")
+                url = f"https://generativelanguage.googleapis.com/v1/models/{model_name}:generateContent?key={api_key}"
+                
+                response = requests.post(url, json=request_body, timeout=60)
+                
+                if response.status_code == 403:
+                    raise ValueError(f"API Key Error (403): {response.text}")
+
+                if response.status_code != 200:
+                    if response.status_code == 400 and "response_mime_type" in response.text:
+                         del request_body["generationConfig"]["response_mime_type"]
+                         response = requests.post(url, json=request_body, timeout=60)
+                
+                if response.status_code != 200:
+                    raise Exception(f"API Error {response.status_code}: {response.text}")
+
+                result = response.json()
+                try:
+                    content = result['candidates'][0]['content']['parts'][0]['text']
+                    break
+                except (KeyError, IndexError) as e:
+                    raise Exception(f"Unexpected response format: {str(e)}")
+
+            except ValueError as ve:
+                raise ve # Critical error, stop trying models
+            except Exception as e:
+                last_error = e
+                log_to_file(f"Model {model_name} failed: {str(e)}")
+                continue
+
+        if not content:
+            raise ValueError(f"All models failed. Last error: {last_error}")
+
+        # Clean up content
+        content = content.replace("```json", "").replace("```", "").strip()
+
+        # Parse JSON
+        try:
+            quiz_data = json.loads(content)
+        except json.JSONDecodeError:
+            json_match = re.search(r'\{.*\}', content, re.DOTALL)
+            if json_match:
+                quiz_data = json.loads(json_match.group())
+            else:
+                raise ValueError("Failed to parse JSON")
+
+        return {
+            "title": scraped_data["title"],
+            "summary": scraped_data["summary"],
+            "key_entities": scraped_data["key_entities"],
+            "sections": scraped_data["sections"],
+            "quiz": quiz_data.get("quiz", [])
+        }
+
+    except Exception as e:
+        log_to_file(f"Quiz generation failed: {e}")
+        print(f"Quiz generation failed: {e}")
+        
+        if SAMPLE_QUIZ_DATA:
+            log_to_file("Falling back to SAMPLE DATA (Demo Mode)")
+            print("Falling back to SAMPLE DATA (Demo Mode)")
+            # Return sample data but with the scraped title so it looks somewhat real
+            return {
+                "title": f"{scraped_data['title']} (DEMO MODE)",
+                "summary": "API Key failed. Showing DEMO content. Please update your API key for real quizzes.",
+                "key_entities": scraped_data["key_entities"],
+                "sections": scraped_data["sections"],
+                "quiz": SAMPLE_QUIZ_DATA["quiz"]
+            }
+        else:
+            raise e

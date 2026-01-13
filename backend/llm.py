@@ -120,8 +120,8 @@ def generate_quiz_data(scraped_data):
     models_to_try = [
         "gemini-2.5-flash",
         "gemini-2.0-flash",
-        "gemini-1.5-flash",
-        "gemini-1.5-pro"
+        "gemini-flash-latest",
+        "gemini-pro-latest"
     ]
     
     last_error = None

@@ -211,10 +211,10 @@ def generate_quiz_data(scraped_data):
         if SAMPLE_QUIZ_DATA:
             log_to_file("Falling back to SAMPLE DATA (Demo Mode)")
             print("Falling back to SAMPLE DATA (Demo Mode)")
-            # Return sample data but with the scraped title so it looks somewhat real
+            # Return sample data but with the scraped title/summary so it looks real
             return {
-                "title": f"{scraped_data['title']} (DEMO MODE)",
-                "summary": "API Key failed. Showing DEMO content. Please update your API key for real quizzes.",
+                "title": scraped_data['title'],
+                "summary": scraped_data['summary'],
                 "key_entities": scraped_data["key_entities"],
                 "sections": scraped_data["sections"],
                 "quiz": SAMPLE_QUIZ_DATA["quiz"]

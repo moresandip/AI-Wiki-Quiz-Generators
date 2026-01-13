@@ -118,7 +118,12 @@ def generate_quiz_data(scraped_data):
     # Dynamically fetch available models to avoid 404s
     available_models = list_available_models()
     
+    # Blacklist models known to cause 404s or other issues
+    BLACKLIST = ["gemini-1.5-pro", "gemini-1.0-pro"]
+    
     if available_models:
+        # Filter out blacklisted models
+        available_models = [m for m in available_models if m not in BLACKLIST]
         # Prioritize flash models if available
         models_to_try = sorted(available_models, key=lambda x: 'flash' not in x)
         log_to_file(f"Using dynamically fetched models: {models_to_try[:3]}...")
@@ -159,7 +164,8 @@ def generate_quiz_data(scraped_data):
     for model_name in models_to_try:
         try:
             print(f"Attempting with model: {model_name}")
-            url = f"https://generativelanguage.googleapis.com/v1beta/models/{model_name}:generateContent?key={api_key}"
+            # Use v1 API for better stability
+            url = f"https://generativelanguage.googleapis.com/v1/models/{model_name}:generateContent?key={api_key}"
             
             response = requests.post(url, json=request_body, timeout=60)
             

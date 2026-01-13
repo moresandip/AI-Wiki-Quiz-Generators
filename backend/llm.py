@@ -115,36 +115,13 @@ def generate_quiz_data(scraped_data):
          #    }
          raise ValueError("GOOGLE_API_KEY environment variable is not set")
 
-    # Dynamically fetch available models
-    available_models = list_available_models()
-    
-    models_to_try = []
-    
-    if available_models:
-        # 1. Prioritize known stable high-performance models
-        PRIORITY_MODELS = [
-            "gemini-2.0-flash",
-            "gemini-1.5-flash",
-            "gemini-flash-latest"
-        ]
-        
-        for pm in PRIORITY_MODELS:
-            if pm in available_models:
-                models_to_try.append(pm)
-        
-        # 2. Add other "flash" models, excluding unstable/preview ones
-        for m in available_models:
-            if m not in models_to_try and "flash" in m:
-                # Exclude specific unstable keywords
-                if not any(bad in m for bad in ["preview", "experimental", "deep-research", "tts", "vision"]):
-                    models_to_try.append(m)
-                    
-        log_to_file(f"Selected models: {models_to_try}")
-    
-    if not models_to_try:
-        # Fallback if filtering removed everything (unlikely)
-        models_to_try = ["gemini-2.0-flash", "gemini-1.5-flash"]
-        log_to_file("Using fallback model list")
+    # Hardcoded list of stable models to prevent "deep-research" or "preview" errors
+    # Dynamic fetching was picking up unstable models despite filtering.
+    models_to_try = [
+        "gemini-2.0-flash",
+        "gemini-1.5-flash"
+    ]
+    log_to_file(f"Using hardcoded stable models: {models_to_try}")
     
     last_error = None
     log_to_file(f"Generating quiz for: {scraped_data.get('title')}")

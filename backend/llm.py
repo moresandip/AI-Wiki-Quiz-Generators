@@ -115,14 +115,22 @@ def generate_quiz_data(scraped_data):
          #    }
          raise ValueError("GOOGLE_API_KEY environment variable is not set")
 
-    # Models to try (REST API endpoint format) - Prioritize Flash for speed
-    # Models to try (REST API endpoint format) - Prioritize Flash for speed
-    models_to_try = [
-        "gemini-2.5-flash",
-        "gemini-2.0-flash",
-        "gemini-flash-latest",
-        "gemini-pro-latest"
-    ]
+    # Dynamically fetch available models to avoid 404s
+    available_models = list_available_models()
+    
+    if available_models:
+        # Prioritize flash models if available
+        models_to_try = sorted(available_models, key=lambda x: 'flash' not in x)
+        log_to_file(f"Using dynamically fetched models: {models_to_try[:3]}...")
+    else:
+        # Fallback if listing fails
+        models_to_try = [
+            "gemini-2.5-flash",
+            "gemini-2.0-flash",
+            "gemini-flash-latest",
+            "gemini-pro-latest"
+        ]
+        log_to_file("Using fallback model list")
     
     last_error = None
     log_to_file(f"Generating quiz for: {scraped_data.get('title')}")

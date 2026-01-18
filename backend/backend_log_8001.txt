@@ -1,0 +1,77 @@
+C:\Users\mores\OneDrive\Desktop\AI Wiki Quiz Generator\backend\venv\Lib\site-packages\pydantic\_internal\_config.py:383: UserWarning: Valid config keys have changed in V2:
+* 'orm_mode' has been renamed to 'from_attributes'
+  warnings.warn(message, UserWarning)
+INFO:     Started server process [31020]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8001 (Press CTRL+C to quit)
+Database tables created successfully.
+INFO:     127.0.0.1:56262 - "GET / HTTP/1.1" 500 Internal Server Error
+ERROR:    Exception in ASGI application
+Traceback (most recent call last):
+  File "C:\Users\mores\OneDrive\Desktop\AI Wiki Quiz Generator\backend\venv\Lib\site-packages\starlette\responses.py", line 349, in __call__
+    stat_result = await anyio.to_thread.run_sync(os.stat, self.path)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mores\OneDrive\Desktop\AI Wiki Quiz Generator\backend\venv\Lib\site-packages\anyio\to_thread.py", line 63, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        func, args, abandon_on_cancel=abandon_on_cancel, limiter=limiter
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\mores\OneDrive\Desktop\AI Wiki Quiz Generator\backend\venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 2502, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "C:\Users\mores\OneDrive\Desktop\AI Wiki Quiz Generator\backend\venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 986, in run
+    result = context.run(func, *args)
+FileNotFoundError: [WinError 2] The system cannot find the file specified: 'C:\\Users\\mores\\OneDrive\\Desktop\\AI Wiki Quiz Generator\\backend\\..\\frontend\\index.html'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\mores\OneDrive\Desktop\AI Wiki Quiz Generator\backend\venv\Lib\site-packages\uvicorn\protocols\http\h11_impl.py", line 410, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        self.scope, self.receive, self.send
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\mores\OneDrive\Desktop\AI Wiki Quiz Generator\backend\venv\Lib\site-packages\uvicorn\middleware\proxy_headers.py", line 60, in __call__
+    return await self.app(scope, receive, send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mores\OneDrive\Desktop\AI Wiki Quiz Generator\backend\venv\Lib\site-packages\fastapi\applications.py", line 1135, in __call__
+    await super().__call__(scope, receive, send)
+  File "C:\Users\mores\OneDrive\Desktop\AI Wiki Quiz Generator\backend\venv\Lib\site-packages\starlette\applications.py", line 107, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\mores\OneDrive\Desktop\AI Wiki Quiz Generator\backend\venv\Lib\site-packages\starlette\middleware\errors.py", line 186, in __call__
+    raise exc
+  File "C:\Users\mores\OneDrive\Desktop\AI Wiki Quiz Generator\backend\venv\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "C:\Users\mores\OneDrive\Desktop\AI Wiki Quiz Generator\backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 85, in __call__
+    await self.app(scope, receive, send)
+  File "C:\Users\mores\OneDrive\Desktop\AI Wiki Quiz Generator\backend\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\mores\OneDrive\Desktop\AI Wiki Quiz Generator\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\mores\OneDrive\Desktop\AI Wiki Quiz Generator\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\mores\OneDrive\Desktop\AI Wiki Quiz Generator\backend\venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "C:\Users\mores\OneDrive\Desktop\AI Wiki Quiz Generator\backend\venv\Lib\site-packages\starlette\routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\mores\OneDrive\Desktop\AI Wiki Quiz Generator\backend\venv\Lib\site-packages\starlette\routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\mores\OneDrive\Desktop\AI Wiki Quiz Generator\backend\venv\Lib\site-packages\starlette\routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\mores\OneDrive\Desktop\AI Wiki Quiz Generator\backend\venv\Lib\site-packages\fastapi\routing.py", line 115, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\mores\OneDrive\Desktop\AI Wiki Quiz Generator\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\mores\OneDrive\Desktop\AI Wiki Quiz Generator\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\mores\OneDrive\Desktop\AI Wiki Quiz Generator\backend\venv\Lib\site-packages\fastapi\routing.py", line 102, in app
+    await response(scope, receive, send)
+  File "C:\Users\mores\OneDrive\Desktop\AI Wiki Quiz Generator\backend\venv\Lib\site-packages\starlette\responses.py", line 352, in __call__
+    raise RuntimeError(f"File at path {self.path} does not exist.")
+RuntimeError: File at path C:\Users\mores\OneDrive\Desktop\AI Wiki Quiz Generator\backend\..\frontend\index.html does not exist.
+INFO:     127.0.0.1:61399 - "GET /favicon.ico HTTP/1.1" 404 Not Found

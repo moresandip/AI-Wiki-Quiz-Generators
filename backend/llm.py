@@ -103,6 +103,7 @@ def generate_quiz_data(scraped_data):
     """
     api_key = os.getenv("GOOGLE_API_KEY") # Keeping the env var name for compatibility, but it holds the OpenRouter key
     if not api_key:
+         log_to_file("CRITICAL ERROR: GOOGLE_API_KEY environment variable is not set. Falling back to sample data.")
          raise ValueError("API Key environment variable is not set")
 
     # Try to generate quiz with models
@@ -195,7 +196,7 @@ def generate_quiz_data(scraped_data):
         print(f"Quiz generation failed: {e}")
         
         if SAMPLE_QUIZ_DATA:
-            log_to_file("Falling back to SAMPLE DATA (Demo Mode)")
+            log_to_file("Falling back to SAMPLE DATA (Demo Mode) - This usually happens because the API Key is invalid or missing.")
             print("Falling back to SAMPLE DATA (Demo Mode)")
             # Return sample data but with the scraped title/summary so it looks real
             return {

@@ -205,3 +205,15 @@ async def save_quiz_results(quiz_id: int, request: SaveResultsRequest, db: Any =
     db.commit()
     
     return {"message": "Quiz results saved successfully"}
+
+if __name__ == "__main__":
+    try:
+        with open("backend_startup_status.txt", "w") as f:
+            f.write("Starting backend...\n")
+        import uvicorn
+        uvicorn.run(app, host="0.0.0.0", port=8000)
+    except Exception as e:
+        with open("backend_startup_status.txt", "a") as f:
+            f.write(f"Failed to start: {e}\n")
+
+

@@ -62,6 +62,7 @@ def test_api_connection():
         return False, f"API connection test failed: {str(e)}"
 
 # Prompt template for quiz generation
+# Prompt template for quiz generation
 QUIZ_PROMPT_TEMPLATE = """
 You are an expert quiz generator. Your task is to create a highly accurate multiple-choice quiz based ONLY on the provided Wikipedia article content.
 
@@ -76,9 +77,9 @@ Instructions:
 2. **IMPORTANT**: Focus on different aspects of the article than typical generic questions.
 3. **STRICT CONSTRAINT**: You must use ONLY the provided text to generate questions and answers. Do not use your internal knowledge base. If a fact is not in the text, do not ask about it.
 4. Each question must have 4 options (A, B, C, D).
-4. The 'answer' field MUST BE AN EXACT STRING MATCH to one of the options.
-5. Provide a short, clear explanation for why the answer is correct, citing the context if possible.
-6. Vary the difficulty (easy, medium, hard).
+5. The 'answer' field MUST BE AN EXACT STRING MATCH to one of the options.
+6. Provide a short, clear explanation for why the answer is correct, citing the context if possible.
+7. Vary the difficulty (easy, medium, hard).
 
 Output the result in this exact JSON format:
 {{
@@ -98,33 +99,21 @@ Output strictly valid JSON only.
 
 def generate_quiz_data(scraped_data):
     """
-    Generate quiz data using direct REST API calls to Google Gemini.
-    Replaces the heavy SDK dependency to reduce build size.
+    Generate quiz data using OpenRouter API (OpenAI-compatible).
     """
-    api_key = os.getenv("GOOGLE_API_KEY")
+    api_key = os.getenv("GOOGLE_API_KEY") # Keeping the env var name for compatibility, but it holds the OpenRouter key
     if not api_key:
-         # Fallback to sample if no key (dev mode) or raise error
-         # if SAMPLE_QUIZ_DATA:
-         #    return {
-         #        "title": scraped_data["title"],
-         #        "summary": scraped_data["summary"],
-         #        "key_entities": scraped_data["key_entities"],
-         #        "sections": scraped_data["sections"],
-         #        "quiz": SAMPLE_QUIZ_DATA["quiz"],
-         #        "related_topics": SAMPLE_QUIZ_DATA.get("related_topics", [])
-         #    }
-         raise ValueError("GOOGLE_API_KEY environment variable is not set")
-
-    # ... (previous code) ...
+         raise ValueError("API Key environment variable is not set")
 
     # Try to generate quiz with models
     try:
-        # Hardcoded list of stable models
+        # OpenRouter models
         models_to_try = [
-            "gemini-2.0-flash",
-            "gemini-1.5-flash"
+            "google/gemini-2.0-flash-001",
+            "google/gemini-pro-1.5",
+            "openai/gpt-3.5-turbo"
         ]
-        log_to_file(f"Using hardcoded stable models: {models_to_try}")
+        log_to_file(f"Using models: {models_to_try}")
         
         last_error = None
         log_to_file(f"Generating quiz for: {scraped_data.get('title')}")
@@ -138,43 +127,40 @@ def generate_quiz_data(scraped_data):
             full_text=scraped_data["full_text"][:6000]
         )
 
-        request_body = {
-            "contents": [{"parts": [{"text": prompt_text}]}],
-            "generationConfig": {
-                "temperature": 0.9,
-                "response_mime_type": "application/json"
-            }
-        }
-
         content = ""
         
         for model_name in models_to_try:
             try:
                 print(f"Attempting with model: {model_name}")
-                url = f"https://generativelanguage.googleapis.com/v1/models/{model_name}:generateContent?key={api_key}"
+                url = "https://openrouter.ai/api/v1/chat/completions"
                 
-                response = requests.post(url, json=request_body, timeout=60)
+                headers = {
+                    "Authorization": f"Bearer {api_key}",
+                    "Content-Type": "application/json",
+                    "HTTP-Referer": "http://localhost:3000", # Required by OpenRouter
+                    "X-Title": "AI Wiki Quiz Generator" # Required by OpenRouter
+                }
                 
-                if response.status_code == 403:
-                    raise ValueError(f"API Key Error (403): {response.text}")
-
-                if response.status_code != 200:
-                    if response.status_code == 400 and "response_mime_type" in response.text:
-                         del request_body["generationConfig"]["response_mime_type"]
-                         response = requests.post(url, json=request_body, timeout=60)
+                data = {
+                    "model": model_name,
+                    "messages": [
+                        {"role": "user", "content": prompt_text}
+                    ],
+                    "response_format": {"type": "json_object"}
+                }
+                
+                response = requests.post(url, headers=headers, json=data, timeout=60)
                 
                 if response.status_code != 200:
                     raise Exception(f"API Error {response.status_code}: {response.text}")
 
                 result = response.json()
                 try:
-                    content = result['candidates'][0]['content']['parts'][0]['text']
+                    content = result['choices'][0]['message']['content']
                     break
                 except (KeyError, IndexError) as e:
                     raise Exception(f"Unexpected response format: {str(e)}")
 
-            except ValueError as ve:
-                raise ve # Critical error, stop trying models
             except Exception as e:
                 last_error = e
                 log_to_file(f"Model {model_name} failed: {str(e)}")

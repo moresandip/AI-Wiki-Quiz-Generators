@@ -30,6 +30,21 @@ def log_to_file(message):
 
 app = FastAPI(title="AI Wiki Quiz Generator", version="1.0.0")
 
+# Startup event to create database tables
+@app.on_event("startup")
+async def startup_event():
+    if SQL_AVAILABLE and engine:
+        try:
+            from models import Base
+            # Create tables if they don't exist
+            Base.metadata.create_all(bind=engine)
+            log_to_file("Database tables created successfully.")
+            print("Database tables created successfully.")
+        except Exception as e:
+            log_to_file(f"Error creating database tables: {e}")
+            print(f"Error creating database tables: {e}")
+
+
 from fastapi.middleware.cors import CORSMiddleware
 
 # CORS configuration - allow all origins for development
@@ -46,19 +61,6 @@ app.add_middleware(
 static_files_path = os.path.join(os.path.dirname(__file__), "..", "frontend")
 app.mount("/static", StaticFiles(directory=static_files_path), name="static")
 
-
-@app.on_event("startup")
-def startup_event():
-    try:
-        from database import engine
-        if engine:
-            import models
-            models.Base.metadata.create_all(bind=engine)
-            print("Database tables created successfully.")
-        else:
-            print("WARNING: Database not configured. Set DATABASE_URL environment variable.")
-    except Exception as e:
-        print(f"WARNING: Database connection failed. Ensure DATABASE_URL is correct in .env. Error: {e}")
 
 @app.get("/")
 async def read_index():

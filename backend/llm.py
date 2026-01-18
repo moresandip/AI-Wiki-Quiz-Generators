@@ -26,29 +26,40 @@ except Exception as e:
 load_dotenv()
 
 def list_available_models():
-    """List available models using OpenRouter API"""
+    """List available models using Google Gemini API"""
     api_key = os.getenv("GOOGLE_API_KEY")
     if not api_key:
         return []
-    
-    # Simple static list for OpenRouter to avoid extra calls/latency
-    return ["google/gemini-2.0-flash-001", "google/gemini-pro-1.5", "openai/gpt-3.5-turbo"]
+
+    # Google Gemini models
+    return ["gemini-1.5-flash", "gemini-1.5-pro", "gemini-pro"]
 
 def test_api_connection():
-    """Test if API key is valid using OpenRouter"""
+    """Test if Google API key is valid"""
     try:
         api_key = os.getenv("GOOGLE_API_KEY")
         if not api_key:
-            return False, "GOOGLE_API_KEY not set env"
-        
-        # Simple auth check
-        if api_key.startswith("sk-or-v1"):
-            return True, "OpenRouter Key detected"
-        elif api_key.startswith("AIza"):
-             return True, "Google Key detected (check formatting compatibility)"
-        else:
-            return True, "API Key present"
+            return False, "GOOGLE_API_KEY not set in environment"
 
+        # Check if it looks like a Google API key
+        if not api_key.startswith("AIza"):
+            return False, "API key should start with 'AIza' for Google Gemini"
+
+        # Simple test request to check if key is valid
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash?key={api_key}"
+        response = requests.get(url, timeout=10)
+
+        if response.status_code == 200:
+            return True, "Google Gemini API key is valid"
+        elif response.status_code == 400:
+            return False, "Invalid API key format"
+        elif response.status_code == 403:
+            return False, "API key does not have permission or quota exceeded"
+        else:
+            return False, f"API test failed with status {response.status_code}"
+
+    except requests.exceptions.RequestException as e:
+        return False, f"Network error testing API: {str(e)}"
     except Exception as e:
         return False, f"API connection test failed: {str(e)}"
 
@@ -89,26 +100,26 @@ Output strictly valid JSON only.
 
 def generate_quiz_data(scraped_data):
     """
-    Generate quiz data using OpenRouter API (OpenAI-compatible).
+    Generate quiz data using Google Gemini API.
     """
-    api_key = os.getenv("GOOGLE_API_KEY") # Keeping the env var name for compatibility, but it holds the OpenRouter key
+    api_key = os.getenv("GOOGLE_API_KEY")
     if not api_key:
          log_to_file("CRITICAL ERROR: GOOGLE_API_KEY environment variable is not set. Falling back to sample data.")
-         raise ValueError("API Key environment variable is not set")
+         raise ValueError("GOOGLE_API_KEY environment variable is not set")
 
-    # Try to generate quiz with models
+    # Try to generate quiz with Google Gemini models
     try:
-        # OpenRouter models
+        # Google Gemini models to try
         models_to_try = [
-            "google/gemini-2.0-flash-001",
-            "google/gemini-pro-1.5",
-            "openai/gpt-4o-mini"
+            "gemini-1.5-flash",
+            "gemini-1.5-pro",
+            "gemini-pro"
         ]
-        log_to_file(f"Using models: {models_to_try}")
-        
+        log_to_file(f"Using Google Gemini models: {models_to_try}")
+
         last_error = None
         log_to_file(f"Generating quiz for: {scraped_data.get('title')}")
-        
+
         # Format the prompt
         prompt_text = QUIZ_PROMPT_TEMPLATE.format(
             title=scraped_data["title"],
@@ -119,35 +130,39 @@ def generate_quiz_data(scraped_data):
         )
 
         content = ""
-        
+
         for model_name in models_to_try:
             try:
                 print(f"Attempting with model: {model_name}")
-                url = "https://openrouter.ai/api/v1/chat/completions"
-                
+                url = f"https://generativelanguage.googleapis.com/v1beta/models/{model_name}:generateContent?key={api_key}"
+
                 headers = {
-                    "Authorization": f"Bearer {api_key}",
-                    "Content-Type": "application/json",
-                    "HTTP-Referer": "http://localhost:3000", # Required by OpenRouter
-                    "X-Title": "AI Wiki Quiz Generator" # Required by OpenRouter
+                    "Content-Type": "application/json"
                 }
-                
+
                 data = {
-                    "model": model_name,
-                    "messages": [
-                        {"role": "user", "content": prompt_text}
-                    ],
-                    "response_format": {"type": "json_object"}
+                    "contents": [{
+                        "parts": [{
+                            "text": prompt_text
+                        }]
+                    }],
+                    "generationConfig": {
+                        "temperature": 0.7,
+                        "topK": 40,
+                        "topP": 0.95,
+                        "maxOutputTokens": 2048,
+                    }
                 }
-                
+
                 response = requests.post(url, headers=headers, json=data, timeout=60)
-                
+
                 if response.status_code != 200:
-                    raise Exception(f"API Error {response.status_code}: {response.text}")
+                    error_data = response.json()
+                    raise Exception(f"API Error {response.status_code}: {error_data.get('error', {}).get('message', response.text)}")
 
                 result = response.json()
                 try:
-                    content = result['choices'][0]['message']['content']
+                    content = result['candidates'][0]['content']['parts'][0]['text']
                     break
                 except (KeyError, IndexError) as e:
                     raise Exception(f"Unexpected response format: {str(e)}")
@@ -158,20 +173,21 @@ def generate_quiz_data(scraped_data):
                 continue
 
         if not content:
-            raise ValueError(f"All models failed. Last error: {last_error}")
+            raise ValueError(f"All Google Gemini models failed. Last error: {last_error}")
 
-        # Clean up content
-        content = content.replace("```json", "").replace("```", "").strip()
+        # Clean up content - Gemini doesn't wrap in code blocks like other APIs
+        content = content.strip()
 
         # Parse JSON
         try:
             quiz_data = json.loads(content)
         except json.JSONDecodeError:
+            # Try to extract JSON from the response
             json_match = re.search(r'\{.*\}', content, re.DOTALL)
             if json_match:
                 quiz_data = json.loads(json_match.group())
             else:
-                raise ValueError("Failed to parse JSON")
+                raise ValueError(f"Failed to parse JSON from Gemini response: {content[:200]}...")
 
         return {
             "title": scraped_data["title"],
@@ -184,7 +200,7 @@ def generate_quiz_data(scraped_data):
     except Exception as e:
         log_to_file(f"Quiz generation failed: {e}")
         print(f"Quiz generation failed: {e}")
-        
+
         if SAMPLE_QUIZ_DATA:
             log_to_file("Falling back to SAMPLE DATA (Demo Mode) - This usually happens because the API Key is invalid or missing.")
             print("Falling back to SAMPLE DATA (Demo Mode)")

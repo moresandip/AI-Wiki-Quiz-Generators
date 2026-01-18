@@ -4,11 +4,12 @@
     "rewrites": [
         {
             "source": "/api/(.*)",
-            "destination": "/api/index.py"
+            "destination": "/api/$1"
         }
     ],
     "functions": {
-        "api/index.py": {
+        "api/**/*.py": {
+            "runtime": "python3.9",
             "maxDuration": 60
         }
     }

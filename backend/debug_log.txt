@@ -2068,3 +2068,48 @@ ValueError: Failed to generate quiz with any model. Last error: API Error 404: {
 [2026-01-18 16:18:03] LLM generation successful.
 [2026-01-18 16:18:03] Updating existing quiz for URL: https://en.wikipedia.org/wiki/Mia_Khalifa
 [2026-01-18 16:18:03] Updated quiz ID: 2
+[2026-01-18 16:54:50] Received quiz generation request for URL: https://en.wikipedia.org/wiki/Mia_Khalifa
+[2026-01-18 16:54:53] Starting scrape...
+[2026-01-18 16:54:53] [SCRAPER] Scraping URL: https://en.wikipedia.org/wiki/Mia_Khalifa
+[2026-01-18 16:55:15] Scrape successful. Title: Mia Khalifa
+[2026-01-18 16:55:15] Starting LLM generation...
+[2026-01-18 16:55:15] [LLM] Using models: ['google/gemini-2.0-flash-001', 'google/gemini-pro-1.5', 'openai/gpt-3.5-turbo']
+[2026-01-18 16:55:15] [LLM] Generating quiz for: Mia Khalifa
+[2026-01-18 16:55:18] [LLM] Model google/gemini-2.0-flash-001 failed: API Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-18 16:55:21] [LLM] Model google/gemini-pro-1.5 failed: API Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-18 16:55:22] [LLM] Model openai/gpt-3.5-turbo failed: API Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-18 16:55:23] [LLM] Quiz generation failed: All models failed. Last error: API Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-18 16:55:23] [LLM] Falling back to SAMPLE DATA (Demo Mode) - This usually happens because the API Key is invalid or missing.
+[2026-01-18 16:55:23] LLM generation successful.
+[2026-01-18 16:55:23] Updating existing quiz for URL: https://en.wikipedia.org/wiki/Mia_Khalifa
+[2026-01-18 16:55:23] Updated quiz ID: 2
+[2026-01-18 17:01:35] Received quiz generation request for URL: https://en.wikipedia.org/wiki/Mia_Khalifa
+[2026-01-18 17:01:35] Starting scrape...
+[2026-01-18 17:01:35] [SCRAPER] Scraping URL: https://en.wikipedia.org/wiki/Mia_Khalifa
+[2026-01-18 17:01:39] Scrape successful. Title: Mia Khalifa
+[2026-01-18 17:01:39] Starting LLM generation...
+[2026-01-18 17:01:39] [LLM] Using models: ['google/gemini-2.0-flash-001', 'google/gemini-pro-1.5', 'openai/gpt-3.5-turbo']
+[2026-01-18 17:01:39] [LLM] Generating quiz for: Mia Khalifa
+[2026-01-18 17:01:40] [LLM] Model google/gemini-2.0-flash-001 failed: API Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-18 17:01:43] [LLM] Model google/gemini-pro-1.5 failed: API Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-18 17:01:45] [LLM] Model openai/gpt-3.5-turbo failed: API Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-18 17:01:45] [LLM] Quiz generation failed: All models failed. Last error: API Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-18 17:01:45] [LLM] Falling back to SAMPLE DATA (Demo Mode) - This usually happens because the API Key is invalid or missing.
+[2026-01-18 17:01:45] LLM generation successful.
+[2026-01-18 17:01:45] Updating existing quiz for URL: https://en.wikipedia.org/wiki/Mia_Khalifa
+[2026-01-18 17:01:45] Updated quiz ID: 2
+[2026-01-18 17:28:05] Received quiz generation request for URL: https://en.wikipedia.org/wiki/Mia_Khalifa
+[2026-01-18 17:28:05] Starting scrape...
+[2026-01-18 17:28:05] [SCRAPER] Scraping URL: https://en.wikipedia.org/wiki/Mia_Khalifa
+[2026-01-18 17:28:09] Scrape successful. Title: Mia Khalifa
+[2026-01-18 17:28:09] Starting LLM generation...
+[2026-01-18 17:28:09] [LLM] Using models: ['google/gemini-2.0-flash-001', 'google/gemini-pro-1.5', 'openai/gpt-3.5-turbo']
+[2026-01-18 17:28:09] [LLM] Generating quiz for: Mia Khalifa
+[2026-01-18 17:28:11] [LLM] Model google/gemini-2.0-flash-001 failed: API Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-18 17:28:15] [LLM] Model google/gemini-pro-1.5 failed: API Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-18 17:28:17] [LLM] Model openai/gpt-3.5-turbo failed: API Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-18 17:28:17] [LLM] Quiz generation failed: All models failed. Last error: API Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-18 17:28:17] [LLM] Falling back to SAMPLE DATA (Demo Mode) - This usually happens because the API Key is invalid or missing.
+[2026-01-18 17:28:17] LLM generation successful.
+[2026-01-18 17:28:17] Updating existing quiz for URL: https://en.wikipedia.org/wiki/Mia_Khalifa
+[2026-01-18 17:28:17] Updated quiz ID: 2

@@ -1,0 +1,35 @@
+[2026-01-18 19:16:36] [LLM] Using Google Gemini models: ['gemini-1.5-flash', 'gemini-1.5-pro', 'gemini-pro']
+[2026-01-18 19:16:36] [LLM] Generating quiz for: Test
+[2026-01-18 19:16:39] [LLM] Model gemini-1.5-flash failed: API Error 404: {
+  "error": {
+    "code": 404,
+    "message": "models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.",
+    "status": "NOT_FOUND"
+  }
+}
+
+[2026-01-18 19:16:42] [LLM] Model gemini-1.5-pro failed: API Error 404: {
+  "error": {
+    "code": 404,
+    "message": "models/gemini-1.5-pro is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.",
+    "status": "NOT_FOUND"
+  }
+}
+
+[2026-01-18 19:16:44] [LLM] Model gemini-pro failed: API Error 404: {
+  "error": {
+    "code": 404,
+    "message": "models/gemini-pro is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.",
+    "status": "NOT_FOUND"
+  }
+}
+
+[2026-01-18 19:16:45] [LLM] Quiz generation failed: All models failed. Last error: API Error 404: {
+  "error": {
+    "code": 404,
+    "message": "models/gemini-pro is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.",
+    "status": "NOT_FOUND"
+  }
+}
+
+[2026-01-18 19:16:45] [LLM] Falling back to SAMPLE DATA (Demo Mode) - This usually happens because the API Key is invalid or missing.

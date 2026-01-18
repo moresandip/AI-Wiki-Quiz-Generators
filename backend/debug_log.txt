@@ -2113,3 +2113,93 @@ ValueError: Failed to generate quiz with any model. Last error: API Error 404: {
 [2026-01-18 17:28:17] LLM generation successful.
 [2026-01-18 17:28:17] Updating existing quiz for URL: https://en.wikipedia.org/wiki/Mia_Khalifa
 [2026-01-18 17:28:17] Updated quiz ID: 2
+[2026-01-18 17:32:06] Received quiz generation request for URL: https://en.wikipedia.org/wiki/Mia_Khalifa
+[2026-01-18 17:32:06] Starting scrape...
+[2026-01-18 17:32:06] [SCRAPER] Scraping URL: https://en.wikipedia.org/wiki/Mia_Khalifa
+[2026-01-18 17:32:13] Scrape successful. Title: Mia Khalifa
+[2026-01-18 17:32:13] Starting LLM generation...
+[2026-01-18 17:32:13] [LLM] Using models: ['google/gemini-2.0-flash-001', 'google/gemini-pro-1.5', 'openai/gpt-3.5-turbo']
+[2026-01-18 17:32:13] [LLM] Generating quiz for: Mia Khalifa
+[2026-01-18 17:32:15] [LLM] Model google/gemini-2.0-flash-001 failed: API Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-18 17:32:18] [LLM] Model google/gemini-pro-1.5 failed: API Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-18 17:32:20] [LLM] Model openai/gpt-3.5-turbo failed: API Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-18 17:32:20] [LLM] Quiz generation failed: All models failed. Last error: API Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-18 17:32:20] [LLM] Falling back to SAMPLE DATA (Demo Mode) - This usually happens because the API Key is invalid or missing.
+[2026-01-18 17:32:20] LLM generation successful.
+[2026-01-18 17:32:23] Updating existing quiz for URL: https://en.wikipedia.org/wiki/Mia_Khalifa
+[2026-01-18 17:32:26] Updated quiz ID: 2
+[2026-01-18 17:49:35] Received quiz generation request for URL: https://en.wikipedia.org/wiki/Mia_Khalifa
+[2026-01-18 17:49:35] Starting scrape...
+[2026-01-18 17:49:35] [SCRAPER] Scraping URL: https://en.wikipedia.org/wiki/Mia_Khalifa
+[2026-01-18 17:49:44] Scrape successful. Title: Mia Khalifa
+[2026-01-18 17:49:44] Starting LLM generation...
+[2026-01-18 17:49:45] [LLM] Using models: ['google/gemini-2.0-flash-001', 'google/gemini-pro-1.5', 'openai/gpt-3.5-turbo']
+[2026-01-18 17:49:45] [LLM] Generating quiz for: Mia Khalifa
+[2026-01-18 17:49:49] [LLM] Model google/gemini-2.0-flash-001 failed: API Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-18 17:49:52] [LLM] Model google/gemini-pro-1.5 failed: API Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-18 17:49:55] [LLM] Model openai/gpt-3.5-turbo failed: API Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-18 17:49:55] [LLM] Quiz generation failed: All models failed. Last error: API Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-18 17:49:55] [LLM] Falling back to SAMPLE DATA (Demo Mode) - This usually happens because the API Key is invalid or missing.
+[2026-01-18 17:49:55] LLM generation successful.
+[2026-01-18 17:49:55] Updating existing quiz for URL: https://en.wikipedia.org/wiki/Mia_Khalifa
+[2026-01-18 17:49:55] Updated quiz ID: 2
+[2026-01-18 18:21:20] Received quiz generation request for URL: https://en.wikipedia.org/wiki/Virat_Kohli
+[2026-01-18 18:21:20] Starting scrape...
+[2026-01-18 18:21:20] [SCRAPER] Scraping URL: https://en.wikipedia.org/wiki/Virat_Kohli
+[2026-01-18 18:21:29] Scrape successful. Title: Virat Kohli
+[2026-01-18 18:21:29] Starting LLM generation...
+[2026-01-18 18:21:29] [LLM] Using models: ['google/gemini-2.0-flash-001', 'google/gemini-pro-1.5', 'openai/gpt-3.5-turbo']
+[2026-01-18 18:21:29] [LLM] Generating quiz for: Virat Kohli
+[2026-01-18 18:21:31] [LLM] Model google/gemini-2.0-flash-001 failed: API Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-18 18:21:34] [LLM] Model google/gemini-pro-1.5 failed: API Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-18 18:21:37] [LLM] Model openai/gpt-3.5-turbo failed: API Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-18 18:21:37] [LLM] Quiz generation failed: All models failed. Last error: API Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-18 18:21:37] [LLM] Falling back to SAMPLE DATA (Demo Mode) - This usually happens because the API Key is invalid or missing.
+[2026-01-18 18:21:37] LLM generation successful.
+[2026-01-18 18:21:37] Updating existing quiz for URL: https://en.wikipedia.org/wiki/Virat_Kohli
+[2026-01-18 18:21:37] Updated quiz ID: 1
+[2026-01-18 19:01:22] Received quiz generation request for URL: https://en.wikipedia.org/wiki/Virat_Kohli
+[2026-01-18 19:01:22] Starting scrape...
+[2026-01-18 19:01:22] [SCRAPER] Scraping URL: https://en.wikipedia.org/wiki/Virat_Kohli
+[2026-01-18 19:01:28] Scrape successful. Title: Virat Kohli
+[2026-01-18 19:01:28] Starting LLM generation...
+[2026-01-18 19:01:28] [LLM] Using models: ['google/gemini-2.0-flash-001', 'google/gemini-pro-1.5', 'openai/gpt-3.5-turbo']
+[2026-01-18 19:01:28] [LLM] Generating quiz for: Virat Kohli
+[2026-01-18 19:01:30] [LLM] Model google/gemini-2.0-flash-001 failed: API Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-18 19:01:33] [LLM] Model google/gemini-pro-1.5 failed: API Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-18 19:01:35] [LLM] Model openai/gpt-3.5-turbo failed: API Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-18 19:01:35] [LLM] Quiz generation failed: All models failed. Last error: API Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-18 19:01:35] [LLM] Falling back to SAMPLE DATA (Demo Mode) - This usually happens because the API Key is invalid or missing.
+[2026-01-18 19:01:35] LLM generation successful.
+[2026-01-18 19:01:35] Updating existing quiz for URL: https://en.wikipedia.org/wiki/Virat_Kohli
+[2026-01-18 19:01:35] Updated quiz ID: 1
+[2026-01-18 19:18:31] Received quiz generation request for URL: https://en.wikipedia.org/wiki/Virat_Kohli
+[2026-01-18 19:18:31] Starting scrape...
+[2026-01-18 19:18:31] [SCRAPER] Scraping URL: https://en.wikipedia.org/wiki/Virat_Kohli
+[2026-01-18 19:18:51] Scrape successful. Title: Virat Kohli
+[2026-01-18 19:18:51] Starting LLM generation...
+[2026-01-18 19:18:51] [LLM] Using models: ['google/gemini-2.0-flash-001', 'google/gemini-pro-1.5', 'openai/gpt-3.5-turbo']
+[2026-01-18 19:18:51] [LLM] Generating quiz for: Virat Kohli
+[2026-01-18 19:18:54] [LLM] Model google/gemini-2.0-flash-001 failed: API Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-18 19:18:56] [LLM] Model google/gemini-pro-1.5 failed: API Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-18 19:18:57] [LLM] Model openai/gpt-3.5-turbo failed: API Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-18 19:18:57] [LLM] Quiz generation failed: All models failed. Last error: API Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-18 19:18:57] [LLM] Falling back to SAMPLE DATA (Demo Mode) - This usually happens because the API Key is invalid or missing.
+[2026-01-18 19:18:57] LLM generation successful.
+[2026-01-18 19:18:59] Creating new quiz for URL: https://en.wikipedia.org/wiki/Virat_Kohli
+[2026-01-18 19:19:01] Saved quiz to DB with ID: 3
+[2026-01-18 19:34:22] Received quiz generation request for URL: https://en.wikipedia.org/wiki/Virat_Kohli
+[2026-01-18 19:34:22] Starting scrape...
+[2026-01-18 19:34:22] [SCRAPER] Scraping URL: https://en.wikipedia.org/wiki/Virat_Kohli
+[2026-01-18 19:34:28] Scrape successful. Title: Virat Kohli
+[2026-01-18 19:34:28] Starting LLM generation...
+[2026-01-18 19:34:28] [LLM] Using models: ['google/gemini-2.0-flash-001', 'google/gemini-pro-1.5', 'openai/gpt-3.5-turbo']
+[2026-01-18 19:34:28] [LLM] Generating quiz for: Virat Kohli
+[2026-01-18 19:34:30] [LLM] Model google/gemini-2.0-flash-001 failed: API Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-18 19:34:31] [LLM] Model google/gemini-pro-1.5 failed: API Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-18 19:34:34] [LLM] Model openai/gpt-3.5-turbo failed: API Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-18 19:34:34] [LLM] Quiz generation failed: All models failed. Last error: API Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-18 19:34:34] [LLM] Falling back to SAMPLE DATA (Demo Mode) - This usually happens because the API Key is invalid or missing.
+[2026-01-18 19:34:34] LLM generation successful.
+[2026-01-18 19:34:34] Updating existing quiz for URL: https://en.wikipedia.org/wiki/Virat_Kohli
+[2026-01-18 19:34:34] Updated quiz ID: 3

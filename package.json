@@ -6,6 +6,6 @@
         "postinstall": "cd frontend && npm install"
     },
     "engines": {
-        "node": "24.x"
+        "node": "20.x"
     }
 }

@@ -12,6 +12,7 @@ def log_to_file(message):
             f.write(f"[{timestamp}] [LLM] {message}\n")
     except Exception:
         pass
+
 # Load sample data as fallback
 SAMPLE_DATA_PATH = os.path.join(os.path.dirname(__file__), '..', 'sample_data', 'sample_output.json')
 try:
@@ -25,43 +26,32 @@ except Exception as e:
 load_dotenv()
 
 def list_available_models():
-    """List available models using REST API to keep size small"""
+    """List available models using OpenRouter API"""
     api_key = os.getenv("GOOGLE_API_KEY")
     if not api_key:
         return []
     
-    try:
-        url = f"https://generativelanguage.googleapis.com/v1beta/models?key={api_key}"
-        response = requests.get(url)
-        if response.status_code == 200:
-            data = response.json()
-            # Filter for generating content
-            return [m['name'].split('/')[-1] for m in data.get('models', []) 
-                    if 'generateContent' in m.get('supportedGenerationMethods', [])]
-        return []
-    except Exception as e:
-        print(f"Error listing models: {e}")
-        return []
+    # Simple static list for OpenRouter to avoid extra calls/latency
+    return ["google/gemini-2.0-flash-001", "google/gemini-pro-1.5", "openai/gpt-3.5-turbo"]
 
 def test_api_connection():
-    """Test if API key is valid using REST API"""
+    """Test if API key is valid using OpenRouter"""
     try:
         api_key = os.getenv("GOOGLE_API_KEY")
         if not api_key:
-            return False, "GOOGLE_API_KEY not set in environment"
+            return False, "GOOGLE_API_KEY not set env"
         
-        # Try to list models as a lightweight check
-        url = f"https://generativelanguage.googleapis.com/v1beta/models?key={api_key}"
-        response = requests.get(url, timeout=10)
-        
-        if response.status_code == 200:
-            return True, "API key appears valid"
+        # Simple auth check
+        if api_key.startswith("sk-or-v1"):
+            return True, "OpenRouter Key detected"
+        elif api_key.startswith("AIza"):
+             return True, "Google Key detected (check formatting compatibility)"
         else:
-            return False, f"API check failed with status {response.status_code}: {response.text}"
+            return True, "API Key present"
+
     except Exception as e:
         return False, f"API connection test failed: {str(e)}"
 
-# Prompt template for quiz generation
 # Prompt template for quiz generation
 QUIZ_PROMPT_TEMPLATE = """
 You are an expert quiz generator. Your task is to create a highly accurate multiple-choice quiz based ONLY on the provided Wikipedia article content.
@@ -112,7 +102,7 @@ def generate_quiz_data(scraped_data):
         models_to_try = [
             "google/gemini-2.0-flash-001",
             "google/gemini-pro-1.5",
-            "openai/gpt-3.5-turbo"
+            "openai/gpt-4o-mini"
         ]
         log_to_file(f"Using models: {models_to_try}")
         

@@ -9,5 +9,5 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '../backend'))
 from main import app as backend_app
 
 app = FastAPI()
-# Mount the backend app at root to handle Vercel rewrites correctly
-app.mount("/", backend_app)
+# Mount the backend app at /api path to handle Vercel's URL structure
+app.mount("/api", backend_app)

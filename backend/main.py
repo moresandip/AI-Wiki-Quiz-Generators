@@ -213,7 +213,7 @@ if __name__ == "__main__":
         with open("backend_startup_status.txt", "w") as f:
             f.write("Starting backend...\n")
         import uvicorn
-        uvicorn.run(app, host="0.0.0.0", port=8000)
+        uvicorn.run(app, host="0.0.0.0", port=8001)
     except Exception as e:
         with open("backend_startup_status.txt", "a") as f:
             f.write(f"Failed to start: {e}\n")

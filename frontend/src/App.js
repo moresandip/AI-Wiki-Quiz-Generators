@@ -19,7 +19,7 @@ function App() {
   const fetchHistory = async () => {
     try {
       const isProduction = process.env.NODE_ENV === 'production';
-      const apiUrl = isProduction ? '/api/quizzes' : 'http://localhost:8000/quizzes';
+      const apiUrl = isProduction ? '/api/quizzes' : 'http://localhost:8001/quizzes';
       const response = await fetch(apiUrl);
       if (response.ok) {
         const data = await response.json();
@@ -49,7 +49,7 @@ function App() {
 
     try {
       const isProduction = process.env.NODE_ENV === 'production';
-      const apiUrl = isProduction ? `/api/quiz/${quizId}` : `http://localhost:8000/quiz/${quizId}`;
+      const apiUrl = isProduction ? `/api/quiz/${quizId}` : `http://localhost:8001/quiz/${quizId}`;
 
       const response = await fetch(apiUrl, { method: 'DELETE' });
 
@@ -86,7 +86,7 @@ function App() {
     setShowResults(false);
 
     const isProduction = process.env.NODE_ENV === 'production';
-    const apiUrl = isProduction ? '/api/generate-quiz' : 'http://localhost:8000/generate-quiz';
+    const apiUrl = isProduction ? '/api/generate-quiz' : 'http://localhost:8001/generate-quiz';
 
     try {
       const response = await fetch(apiUrl, {
@@ -140,7 +140,7 @@ function App() {
 
     try {
       const isProduction = process.env.NODE_ENV === 'production';
-      const apiUrl = isProduction ? `/api/quiz/${quizData.id}/save-results` : `http://localhost:8000/quiz/${quizData.id}/save-results`;
+      const apiUrl = isProduction ? `/api/quiz/${quizData.id}/save-results` : `http://localhost:8001/quiz/${quizData.id}/save-results`;
 
       const response = await fetch(apiUrl, {
         method: 'PUT',
@@ -167,7 +167,7 @@ function App() {
 
     try {
       const isProduction = process.env.NODE_ENV === 'production';
-      const apiUrl = isProduction ? `/api/quiz/${quizId}` : `http://localhost:8000/quiz/${quizId}`;
+      const apiUrl = isProduction ? `/api/quiz/${quizId}` : `http://localhost:8001/quiz/${quizId}`;
 
       const response = await fetch(apiUrl, { method: 'DELETE' });
 
@@ -196,7 +196,7 @@ function App() {
 
     try {
       const isProduction = process.env.NODE_ENV === 'production';
-      const apiUrl = isProduction ? `/api/quiz/${quizData.id}/save-results` : `http://localhost:8000/quiz/${quizData.id}/save-results`;
+      const apiUrl = isProduction ? `/api/quiz/${quizData.id}/save-results` : `http://localhost:8001/quiz/${quizData.id}/save-results`;
 
       const response = await fetch(apiUrl, {
         method: 'PUT',

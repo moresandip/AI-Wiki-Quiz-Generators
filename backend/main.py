@@ -22,7 +22,7 @@ load_dotenv()
 
 def log_to_file(message):
     try:
-        with open("debug_log.txt", "a", encoding="utf-8") as f:
+        with open("error_log.txt", "a", encoding="utf-8") as f:
             timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             f.write(f"[{timestamp}] {message}\n")
     except Exception as e:

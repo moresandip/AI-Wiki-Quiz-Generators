@@ -8,6 +8,4 @@ venv/
 .venv/
 .DS_Store
 *.db
-*debug_log.txt
-backend/debug_log.txt
 backend/quiz.db

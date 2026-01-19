@@ -1,5 +1,5 @@
 {
-    "buildCommand": "npm run build",
+    "buildCommand": "pip install -r backend/requirements.txt && python backend/create_tables.py && npm run build",
     "outputDirectory": "frontend/build",
     "rewrites": [
         {

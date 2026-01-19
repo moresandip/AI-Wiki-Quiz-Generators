@@ -10,7 +10,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'backend'))
 from main import generate_quiz
 from schemas import QuizRequest
 from database import engine, SQL_AVAILABLE
-from models import Base
+from models import Base, Quiz
 
 # Ensure database tables exist (important for serverless environments)
 if SQL_AVAILABLE and engine:

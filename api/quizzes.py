@@ -8,7 +8,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'backend'))
 
 from main import get_recent_quizzes
 from database import engine, SQL_AVAILABLE
-from models import Base
+from models import Base, Quiz
 
 # Ensure database tables exist (important for serverless environments)
 if SQL_AVAILABLE and engine:
@@ -26,7 +26,7 @@ class handler(BaseHTTPRequestHandler):
             self.end_headers()
 
             # Call the get_quizzes function
-            result = get_quizzes()
+            result = get_recent_quizzes()
 
             # Return the result
             self.wfile.write(json.dumps(result).encode('utf-8'))

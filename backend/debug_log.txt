@@ -2398,3 +2398,18 @@ ValueError: Failed to generate quiz with any model. Last error: API Error 404: {
 [2026-01-19 12:10:11] LLM generation successful.
 [2026-01-19 12:10:11] Updating existing quiz for URL: https://en.wikipedia.org/wiki/MS_Dhoni
 [2026-01-19 12:10:11] Updated quiz ID: 4
+[2026-01-19 12:40:30] Received quiz generation request for URL: https://en.wikipedia.org/wiki/MS_Dhoni
+[2026-01-19 12:40:33] Starting scrape...
+[2026-01-19 12:40:33] [SCRAPER] Scraping URL: https://en.wikipedia.org/wiki/MS_Dhoni
+[2026-01-19 12:40:48] Scrape successful. Title: MS Dhoni
+[2026-01-19 12:40:48] Starting LLM generation...
+[2026-01-19 12:40:48] [LLM] Using models: ['google/gemini-2.0-flash-001', 'google/gemini-pro-1.5', 'openai/gpt-3.5-turbo']
+[2026-01-19 12:40:48] [LLM] Generating quiz for: MS Dhoni
+[2026-01-19 12:40:53] [LLM] Model google/gemini-2.0-flash-001 failed: API Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-19 12:40:55] [LLM] Model google/gemini-pro-1.5 failed: API Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-19 12:40:58] [LLM] Model openai/gpt-3.5-turbo failed: API Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-19 12:40:58] [LLM] Quiz generation failed: All models failed. Last error: API Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-19 12:40:59] [LLM] Falling back to SAMPLE DATA (Demo Mode) - This usually happens because the API Key is invalid or missing.
+[2026-01-19 12:40:59] LLM generation successful.
+[2026-01-19 12:41:00] Updating existing quiz for URL: https://en.wikipedia.org/wiki/MS_Dhoni
+[2026-01-19 12:41:00] Updated quiz ID: 4

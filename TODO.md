@@ -9,6 +9,8 @@
 ## Steps to Complete
 - [x] Update backend/database.py to use PostgreSQL as default (with fallback to SQLite for local dev)
 - [x] Update API_KEY_SETUP.md with Supabase setup instructions
+- [ ] Set up Supabase account and project
+- [ ] Get connection string and set as DATABASE_URL in Vercel environment variables
 - [ ] Test local setup with PostgreSQL
 - [ ] Deploy and test on Vercel with Supabase DATABASE_URL
 

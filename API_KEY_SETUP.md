@@ -31,9 +31,46 @@ Create `backend/.env` with:
 GOOGLE_API_KEY=AIzaSy...your_key_here
 ```
 
+## Setting Up Supabase Database (Required for Vercel Deployment)
+
+Since Vercel doesn't support persistent SQLite databases, we use Supabase (free PostgreSQL) for production.
+
+### 1. Create a Supabase Account and Project
+
+1. Go to [Supabase](https://supabase.com/)
+2. Sign up or log in
+3. Click "New project"
+4. Choose your organization, enter project name (e.g., "ai-wiki-quiz")
+5. Set database password (save this securely)
+6. Choose region closest to you
+7. Click "Create new project"
+
+### 2. Get Your Database Connection String
+
+1. In your Supabase dashboard, go to Settings > Database
+2. Under "Connection string", select "URI" from the dropdown
+3. Copy the connection string (it will look like: `postgresql://postgres:[password]@db.[project-ref].supabase.co:5432/postgres`)
+
+### 3. Set Environment Variables in Vercel
+
+1. Go to your Vercel project dashboard
+2. Navigate to Settings > Environment Variables
+3. Add these variables:
+   - `DATABASE_URL`: Your Supabase connection string
+   - `GOOGLE_API_KEY`: Your Google Gemini API key
+
+### 4. Test Local Setup with PostgreSQL
+
+For local development with PostgreSQL:
+
+1. Install PostgreSQL locally or use a Docker container
+2. Set `DATABASE_URL` in your `.env` file to your local PostgreSQL connection string
+3. Run `python backend/create_tables.py` to create tables
+4. Test the app locally
+
 ## Testing Your Setup
 
-After setting up your API key, you can test it by:
+After setting up your API key and database, you can test it by:
 
 1. Running the backend: `uvicorn main:app --reload`
 2. Visiting `http://localhost:8000/api-status` to check if the API key is valid

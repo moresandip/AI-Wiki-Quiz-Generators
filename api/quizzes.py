@@ -7,12 +7,10 @@ import json
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'backend'))
 
 from main import get_recent_quizzes
-from database import engine, SQL_AVAILABLE
-from models import Base, Quiz
+from db_utils import init_db
 
-# Ensure database tables exist (important for serverless environments)
-if SQL_AVAILABLE and engine:
-    Base.metadata.create_all(bind=engine)
+# Initialize the database
+init_db()
 
 class handler(BaseHTTPRequestHandler):
     def do_GET(self):

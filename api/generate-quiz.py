@@ -9,6 +9,12 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'backend'))
 
 from main import generate_quiz
 from schemas import QuizRequest
+from database import engine, SQL_AVAILABLE
+from models import Base
+
+# Ensure database tables exist (important for serverless environments)
+if SQL_AVAILABLE and engine:
+    Base.metadata.create_all(bind=engine)
 
 class handler(BaseHTTPRequestHandler):
     def do_POST(self):

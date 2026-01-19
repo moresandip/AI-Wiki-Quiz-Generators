@@ -122,6 +122,41 @@ def get_quiz(quiz_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Quiz not found")
     return quiz
 
+@app.delete("/api/quiz/{quiz_id}")
+def delete_quiz(quiz_id: int, db: Session = Depends(get_db)):
+    if not db:
+        raise HTTPException(status_code=503, detail="Database not available")
+    
+    quiz = db.query(models.Quiz).filter(models.Quiz.id == quiz_id).first()
+    if not quiz:
+        raise HTTPException(status_code=404, detail="Quiz not found")
+    
+    db.delete(quiz)
+    db.commit()
+    logger.info(f"Deleted quiz with ID: {quiz_id}")
+    return {"message": "Quiz deleted successfully"}
+
+@app.put("/api/quiz/{quiz_id}/save-results")
+def save_quiz_results(quiz_id: int, request: Dict[str, Any], db: Session = Depends(get_db)):
+    if not db:
+        raise HTTPException(status_code=503, detail="Database not available")
+    
+    quiz = db.query(models.Quiz).filter(models.Quiz.id == quiz_id).first()
+    if not quiz:
+        raise HTTPException(status_code=404, detail="Quiz not found")
+    
+    # Update quiz data with user answers
+    user_answers = request.get("user_answers", {})
+    if quiz.data:
+        quiz.data["user_answers"] = user_answers
+    else:
+        quiz.data = {"user_answers": user_answers}
+    
+    db.commit()
+    db.refresh(quiz)
+    logger.info(f"Saved results for quiz ID: {quiz_id}")
+    return {"message": "Results saved successfully", "quiz": quiz}
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)

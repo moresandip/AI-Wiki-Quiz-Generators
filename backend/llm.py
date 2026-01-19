@@ -112,8 +112,8 @@ def generate_quiz_data(scraped_data):
     try:
         # Google Gemini models to try
         models_to_try = [
-            "gemini-1.5-flash-latest",
-            "gemini-1.5-pro-latest",
+            "gemini-1.5-flash",
+            "gemini-1.5-pro",
             "gemini-pro"
         ]
         log_to_file(f"Using Google Gemini models: {models_to_try}")

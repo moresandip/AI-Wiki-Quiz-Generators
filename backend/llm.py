@@ -26,42 +26,53 @@ except Exception as e:
 load_dotenv()
 
 def list_available_models():
-    """List available models using Google Gemini API"""
-    api_key = os.getenv("GOOGLE_API_KEY")
-    if not api_key:
-        return []
-
-    # Google Gemini models
-    return ["gemini-1.5-flash-latest", "gemini-1.5-pro-latest", "gemini-pro"]
+    """List available models based on configured API key"""
+    google_key = os.getenv("GOOGLE_API_KEY")
+    openrouter_key = os.getenv("OPENROUTER_API_KEY")
+    
+    models = []
+    if google_key:
+        models.extend(["gemini-1.5-flash", "gemini-1.5-pro"])
+    if openrouter_key:
+        models.extend(["google/gemini-2.0-flash-lite-preview-02-05:free", "google/gemini-2.0-pro-exp-02-05:free", "deepseek/deepseek-r1:free"])
+        
+    return models
 
 def test_api_connection():
-    """Test if Google API key is valid"""
-    try:
-        api_key = os.getenv("GOOGLE_API_KEY")
-        if not api_key:
-            return False, "GOOGLE_API_KEY not set in environment"
+    """Test if a valid API key is present"""
+    google_key = os.getenv("GOOGLE_API_KEY")
+    openrouter_key = os.getenv("OPENROUTER_API_KEY")
+    
+    if not google_key and not openrouter_key:
+        return False, "No API key found (GOOGLE_API_KEY or OPENROUTER_API_KEY)"
 
-        # Check if it looks like a Google API key
-        if not api_key.startswith("AIza"):
-            return False, "API key should start with 'AIza' for Google Gemini"
+    if google_key:
+        # Test Google Key
+        try:
+            url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash?key={google_key}"
+            response = requests.get(url, timeout=10)
+            if response.status_code == 200:
+                return True, "Google Gemini API key is valid"
+        except Exception as e:
+            if not openrouter_key:
+                return False, f"Google API test failed: {str(e)}"
 
-        # Simple test request to check if key is valid
-        url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash?key={api_key}"
-        response = requests.get(url, timeout=10)
-
-        if response.status_code == 200:
-            return True, "Google Gemini API key is valid"
-        elif response.status_code == 400:
-            return False, "Invalid API key format"
-        elif response.status_code == 403:
-            return False, "API key does not have permission or quota exceeded"
-        else:
-            return False, f"API test failed with status {response.status_code}"
-
-    except requests.exceptions.RequestException as e:
-        return False, f"Network error testing API: {str(e)}"
-    except Exception as e:
-        return False, f"API connection test failed: {str(e)}"
+    if openrouter_key:
+        # Test OpenRouter Key
+        try:
+            response = requests.get(
+                "https://openrouter.ai/api/v1/auth/key",
+                headers={"Authorization": f"Bearer {openrouter_key}"},
+                timeout=10
+            )
+            if response.status_code == 200:
+                return True, "OpenRouter API key is valid"
+            elif response.status_code == 401:
+                return False, "Invalid OpenRouter API key"
+        except Exception as e:
+            return False, f"OpenRouter API test failed: {str(e)}"
+            
+    return False, "API test failed"
 
 # Prompt template for quiz generation
 QUIZ_PROMPT_TEMPLATE = """
@@ -98,27 +109,107 @@ Output the result in this exact JSON format:
 Output strictly valid JSON only.
 """
 
+def generate_with_openrouter(api_key, prompt_text):
+    """Generate content using OpenRouter API"""
+    headers = {
+        "Authorization": f"Bearer {api_key}",
+        "Content-Type": "application/json",
+        "HTTP-Referer": "http://localhost:3000", # Optional, for including your app on openrouter.ai rankings.
+        "X-Title": "AI Wiki Quiz Generator", # Optional. Shows in rankings on openrouter.ai.
+    }
+    
+    # List of models to try in order of preference
+    models = [
+        "google/gemini-2.0-flash-lite-preview-02-05:free",
+        "google/gemini-2.0-pro-exp-02-05:free",
+        "deepseek/deepseek-r1:free"
+    ]
+    
+    last_error = None
+    
+    for model in models:
+        try:
+            log_to_file(f"Attempting OpenRouter with model: {model}")
+            data = {
+                "model": model,
+                "messages": [
+                    {"role": "user", "content": prompt_text}
+                ],
+                "temperature": 0.7,
+                "top_p": 0.9,
+                "response_format": {"type": "json_object"}
+            }
+            
+            response = requests.post(
+                "https://openrouter.ai/api/v1/chat/completions",
+                headers=headers,
+                json=data,
+                timeout=60
+            )
+            
+            if response.status_code != 200:
+                error_msg = f"OpenRouter Error {response.status_code}: {response.text}"
+                log_to_file(error_msg)
+                raise Exception(error_msg)
+                
+            result = response.json()
+            content = result['choices'][0]['message']['content']
+            return content
+            
+        except Exception as e:
+            last_error = e
+            log_to_file(f"OpenRouter model {model} failed: {str(e)}")
+            continue
+            
+    raise Exception(f"All OpenRouter models failed. Last error: {last_error}")
+
+def generate_with_gemini(api_key, prompt_text):
+    """Generate content using Google Gemini API"""
+    models_to_try = ["gemini-1.5-flash", "gemini-1.5-pro", "gemini-pro"]
+    last_error = None
+    
+    for model_name in models_to_try:
+        try:
+            log_to_file(f"Attempting Gemini with model: {model_name}")
+            url = f"https://generativelanguage.googleapis.com/v1beta/models/{model_name}:generateContent?key={api_key}"
+            headers = {"Content-Type": "application/json"}
+            data = {
+                "contents": [{"parts": [{"text": prompt_text}]}],
+                "generationConfig": {
+                    "temperature": 0.7,
+                    "topK": 40,
+                    "topP": 0.95,
+                    "maxOutputTokens": 2048,
+                }
+            }
+            
+            response = requests.post(url, headers=headers, json=data, timeout=60)
+            
+            if response.status_code != 200:
+                raise Exception(f"API Error {response.status_code}: {response.text}")
+                
+            result = response.json()
+            return result['candidates'][0]['content']['parts'][0]['text']
+            
+        except Exception as e:
+            last_error = e
+            log_to_file(f"Gemini model {model_name} failed: {str(e)}")
+            continue
+            
+    raise Exception(f"All Gemini models failed. Last error: {last_error}")
+
 def generate_quiz_data(scraped_data):
     """
-    Generate quiz data using Google Gemini API.
+    Generate quiz data using configured API (OpenRouter or Gemini).
     """
-    # TODO: Replace this with a secure way of storing the API key, such as environment variables.
-    api_key = "AIzaSyAUC5WN8MpqTlYjtmvhXcuQMkxkGwQfrXY"
-    if not api_key:
-         log_to_file("CRITICAL ERROR: GOOGLE_API_KEY environment variable is not set. Falling back to sample data.")
-         raise ValueError("GOOGLE_API_KEY environment variable is not set")
+    google_key = os.getenv("GOOGLE_API_KEY")
+    openrouter_key = os.getenv("OPENROUTER_API_KEY")
+    
+    if not google_key and not openrouter_key:
+         log_to_file("CRITICAL ERROR: No API key set. Falling back to sample data.")
+         raise ValueError("No API key configured (GOOGLE_API_KEY or OPENROUTER_API_KEY)")
 
-    # Try to generate quiz with Google Gemini models
     try:
-        # Google Gemini models to try
-        models_to_try = [
-            "gemini-1.5-flash",
-            "gemini-1.5-pro",
-            "gemini-pro"
-        ]
-        log_to_file(f"Using Google Gemini models: {models_to_try}")
-
-        last_error = None
         log_to_file(f"Generating quiz for: {scraped_data.get('title')}")
 
         # Format the prompt
@@ -131,54 +222,16 @@ def generate_quiz_data(scraped_data):
         )
 
         content = ""
+        
+        # Prefer OpenRouter if available (since user explicitly provided it)
+        if openrouter_key:
+            content = generate_with_openrouter(openrouter_key, prompt_text)
+        elif google_key:
+            content = generate_with_gemini(google_key, prompt_text)
 
-        for model_name in models_to_try:
-            try:
-                print(f"Attempting with model: {model_name}")
-                url = f"https://generativelanguage.googleapis.com/v1beta/models/{model_name}:generateContent?key={api_key}"
-
-                headers = {
-                    "Content-Type": "application/json"
-                }
-
-                data = {
-                    "contents": [{
-                        "parts": [{
-                            "text": prompt_text
-                        }]
-                    }],
-                    "generationConfig": {
-                        "temperature": 0.7,
-                        "topK": 40,
-                        "topP": 0.95,
-                        "maxOutputTokens": 2048,
-                    }
-                }
-
-                response = requests.post(url, headers=headers, json=data, timeout=60)
-
-                if response.status_code != 200:
-                    error_data = response.json()
-                    raise Exception(f"API Error {response.status_code}: {error_data.get('error', {}).get('message', response.text)}")
-
-                result = response.json()
-                try:
-                    content = result['candidates'][0]['content']['parts'][0]['text']
-                    break
-                except (KeyError, IndexError) as e:
-                    raise Exception(f"Unexpected response format: {str(e)}")
-
-            except Exception as e:
-                last_error = e
-                log_to_file(f"Model {model_name} failed: {str(e)}")
-                continue
-
-        if not content:
-            raise ValueError(f"All Google Gemini models failed. Last error: {last_error}")
-
-        # Clean up content - Gemini doesn't wrap in code blocks like other APIs
+        # Clean up content
         content = content.strip()
-
+        
         # Parse JSON
         try:
             quiz_data = json.loads(content)
@@ -188,7 +241,7 @@ def generate_quiz_data(scraped_data):
             if json_match:
                 quiz_data = json.loads(json_match.group())
             else:
-                raise ValueError(f"Failed to parse JSON from Gemini response: {content[:200]}...")
+                raise ValueError(f"Failed to parse JSON from response: {content[:200]}...")
 
         return {
             "title": scraped_data["title"],
@@ -203,9 +256,8 @@ def generate_quiz_data(scraped_data):
         print(f"Quiz generation failed: {e}")
 
         if SAMPLE_QUIZ_DATA:
-            log_to_file("Falling back to SAMPLE DATA (Demo Mode) - This usually happens because the API Key is invalid or missing.")
+            log_to_file("Falling back to SAMPLE DATA (Demo Mode)")
             print("Falling back to SAMPLE DATA (Demo Mode)")
-            # Return sample data but with the scraped title/summary so it looks real
             return {
                 "title": scraped_data['title'],
                 "summary": scraped_data['summary'],

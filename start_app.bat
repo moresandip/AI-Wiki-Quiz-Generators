@@ -7,13 +7,26 @@ echo.
 :: Check if .env file exists
 if not exist "backend\.env" (
     echo [WARNING] .env file not found in backend folder!
-    echo Please create backend\.env file with your GOOGLE_API_KEY
-    echo Example: GOOGLE_API_KEY=your_api_key_here
+    echo Please create backend\.env file with your API key
+    echo Example: OPENROUTER_API_KEY=your_key OR GOOGLE_API_KEY=your_key
     echo.
     echo You can run setup_api_key.bat to set it up automatically.
     echo.
     pause
     exit /b 1
+)
+
+:: Check for API key in .env (simple check)
+findstr "GOOGLE_API_KEY" "backend\.env" >nul
+if %errorlevel% neq 0 (
+    findstr "OPENROUTER_API_KEY" "backend\.env" >nul
+    if %errorlevel% neq 0 (
+        echo [WARNING] No API key found in backend\.env!
+        echo Please add GOOGLE_API_KEY or OPENROUTER_API_KEY to backend\.env
+        echo.
+        pause
+        exit /b 1
+    )
 )
 
 :: Check if port 8000 is already in use

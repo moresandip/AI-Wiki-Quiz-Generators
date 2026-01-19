@@ -107,6 +107,11 @@ class handler(BaseHTTPRequestHandler):
 
         logger.info(f"Received quiz request for URL: {url}")
 
+        # Ensure tables exist
+        if database.SQL_AVAILABLE and database.engine:
+            models.Base.metadata.create_all(bind=database.engine)
+            logger.info("Database tables created (if not existed).")
+
         try:
             # Scrape
             scraped_data = scraper.scrape_wikipedia(url)
@@ -157,6 +162,10 @@ class handler(BaseHTTPRequestHandler):
             self.send_error(500, str(e))
 
     def handle_get_quizzes(self):
+        # Ensure tables exist
+        if database.SQL_AVAILABLE and database.engine:
+            models.Base.metadata.create_all(bind=database.engine)
+
         db_gen = self.get_db()
         db = next(db_gen, None)
         if not db:
@@ -212,6 +221,10 @@ class handler(BaseHTTPRequestHandler):
         self.wfile.write(json.dumps(result).encode())
 
     def handle_delete_quiz(self, quiz_id):
+        # Ensure tables exist
+        if database.SQL_AVAILABLE and database.engine:
+            models.Base.metadata.create_all(bind=database.engine)
+
         db_gen = self.get_db()
         db = next(db_gen, None)
         if not db:
@@ -237,6 +250,10 @@ class handler(BaseHTTPRequestHandler):
         post_data = self.rfile.read(content_length)
         data = json.loads(post_data.decode('utf-8'))
         user_answers = data.get("user_answers", {})
+
+        # Ensure tables exist
+        if database.SQL_AVAILABLE and database.engine:
+            models.Base.metadata.create_all(bind=database.engine)
 
         db_gen = self.get_db()
         db = next(db_gen, None)

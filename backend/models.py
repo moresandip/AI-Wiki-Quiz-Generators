@@ -1,4 +1,4 @@
-from database import Base, SQL_AVAILABLE, DATABASE_URL
+from .database import Base, SQL_AVAILABLE, DATABASE_URL
 
 if SQL_AVAILABLE:
     from sqlalchemy import Column, Integer, String, Text, DateTime

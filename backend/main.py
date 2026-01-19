@@ -58,8 +58,12 @@ def health_check():
 
 @app.post("/api/quiz", response_model=schemas.QuizResponse)
 def generate_quiz(request: schemas.QuizRequest, db: Session = Depends(get_db)):
+    # Ensure tables exist
+    if database.SQL_AVAILABLE and database.engine:
+        models.Base.metadata.create_all(bind=database.engine)
+
     logger.info(f"Received quiz request for URL: {request.url}")
-    
+
     try:
         # 1. Scrape Wikipedia
         logger.info("Scraping Wikipedia...")
@@ -107,6 +111,10 @@ def generate_quiz(request: schemas.QuizRequest, db: Session = Depends(get_db)):
 
 @app.get("/api/quizzes", response_model=List[schemas.QuizResponse])
 def get_recent_quizzes(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
+    # Ensure tables exist
+    if database.SQL_AVAILABLE and database.engine:
+        models.Base.metadata.create_all(bind=database.engine)
+
     if not db:
         return []
     quizzes = db.query(models.Quiz).order_by(models.Quiz.created_at.desc()).offset(skip).limit(limit).all()
@@ -114,9 +122,13 @@ def get_recent_quizzes(skip: int = 0, limit: int = 10, db: Session = Depends(get
 
 @app.get("/api/quiz/{quiz_id}", response_model=schemas.QuizResponse)
 def get_quiz(quiz_id: int, db: Session = Depends(get_db)):
+    # Ensure tables exist
+    if database.SQL_AVAILABLE and database.engine:
+        models.Base.metadata.create_all(bind=database.engine)
+
     if not db:
         raise HTTPException(status_code=503, detail="Database not available")
-    
+
     quiz = db.query(models.Quiz).filter(models.Quiz.id == quiz_id).first()
     if not quiz:
         raise HTTPException(status_code=404, detail="Quiz not found")
@@ -124,13 +136,17 @@ def get_quiz(quiz_id: int, db: Session = Depends(get_db)):
 
 @app.delete("/api/quiz/{quiz_id}")
 def delete_quiz(quiz_id: int, db: Session = Depends(get_db)):
+    # Ensure tables exist
+    if database.SQL_AVAILABLE and database.engine:
+        models.Base.metadata.create_all(bind=database.engine)
+
     if not db:
         raise HTTPException(status_code=503, detail="Database not available")
-    
+
     quiz = db.query(models.Quiz).filter(models.Quiz.id == quiz_id).first()
     if not quiz:
         raise HTTPException(status_code=404, detail="Quiz not found")
-    
+
     db.delete(quiz)
     db.commit()
     logger.info(f"Deleted quiz with ID: {quiz_id}")
@@ -138,20 +154,24 @@ def delete_quiz(quiz_id: int, db: Session = Depends(get_db)):
 
 @app.put("/api/quiz/{quiz_id}/save-results")
 def save_quiz_results(quiz_id: int, request: Dict[str, Any], db: Session = Depends(get_db)):
+    # Ensure tables exist
+    if database.SQL_AVAILABLE and database.engine:
+        models.Base.metadata.create_all(bind=database.engine)
+
     if not db:
         raise HTTPException(status_code=503, detail="Database not available")
-    
+
     quiz = db.query(models.Quiz).filter(models.Quiz.id == quiz_id).first()
     if not quiz:
         raise HTTPException(status_code=404, detail="Quiz not found")
-    
+
     # Update quiz data with user answers
     user_answers = request.get("user_answers", {})
     if quiz.data:
         quiz.data["user_answers"] = user_answers
     else:
         quiz.data = {"user_answers": user_answers}
-    
+
     db.commit()
     db.refresh(quiz)
     logger.info(f"Saved results for quiz ID: {quiz_id}")

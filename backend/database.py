@@ -16,8 +16,12 @@ except ImportError:
 
 # Check if running on Vercel (or any read-only environment)
 if os.environ.get("VERCEL") or os.environ.get("AWS_LAMBDA_FUNCTION_NAME"):
-    # Use /tmp directory for SQLite in serverless environments
-    DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:////tmp/quiz.db")
+    # For production/serverless, require DATABASE_URL (e.g., Supabase PostgreSQL)
+    DATABASE_URL = os.getenv("DATABASE_URL")
+    if not DATABASE_URL:
+        print("WARNING: DATABASE_URL not set. For production deployment, set DATABASE_URL to a PostgreSQL connection string (e.g., Supabase).")
+        # Fallback to SQLite for development, but it won't persist
+        DATABASE_URL = "sqlite:////tmp/quiz.db"
 else:
     DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./quiz.db")
 

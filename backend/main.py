@@ -41,8 +41,12 @@ def get_db():
         db.close()
 
 # Create tables if they don't exist
-if database.SQL_AVAILABLE and database.engine:
-    models.Base.metadata.create_all(bind=database.engine)
+# Create tables on startup (essential for Vercel/SQLite)
+@app.on_event("startup")
+async def startup_event():
+    if database.SQL_AVAILABLE and database.engine:
+        models.Base.metadata.create_all(bind=database.engine)
+        logger.info("Database tables created (if not existed).")
 
 @app.get("/")
 def read_root():

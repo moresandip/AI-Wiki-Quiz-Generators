@@ -102,7 +102,8 @@ def generate_quiz_data(scraped_data):
     """
     Generate quiz data using Google Gemini API.
     """
-    api_key = os.getenv("GOOGLE_API_KEY")
+    # TODO: Replace this with a secure way of storing the API key, such as environment variables.
+    api_key = "AIzaSyAUC5WN8MpqTlYjtmvhXcuQMkxkGwQfrXY"
     if not api_key:
          log_to_file("CRITICAL ERROR: GOOGLE_API_KEY environment variable is not set. Falling back to sample data.")
          raise ValueError("GOOGLE_API_KEY environment variable is not set")

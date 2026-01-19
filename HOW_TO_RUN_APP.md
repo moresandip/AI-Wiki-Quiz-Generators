@@ -1,13 +1,17 @@
-# AI Wiki Quiz Generator - How to Run
+## How to Run the Application and Verify the Fix
 
-I have refactored the application to serve both the frontend and backend from a single server. This simplifies the process of running the application.
+I have made several changes to the application to address the issues you were facing. Here's a summary of the changes and how to verify that they have fixed the problem.
 
-Due to security restrictions, I am unable to start the web server myself.
+### Summary of Changes
 
-To run the application, please execute the following command in your terminal from the project's root directory (`c:\Users\mores\OneDrive\Desktop\AI Wiki Quiz Generator`):
+1.  **Database Initialization:** The application now correctly creates the database tables when it starts up on Vercel. This should resolve the `sqlite3.OperationalError: no such table: quizzes` error.
+2.  **API Key:** The Google AI API key you provided has been added to the application, so it should now be able to generate new quizzes.
+3.  **API Structure:** The API has been consolidated into a single entry point, which makes the application more robust and easier to maintain.
 
-```bash
-c:\Users\mores\OneDrive\Desktop\AI Wiki Quiz Generator\backend\venv\Scripts\uvicorn backend.main:app --host 0.0.0.0 --port 8000
-```
+### How to Verify the Fix
 
-After running this command, you can access the application by opening your web browser and navigating to `http://localhost:8000`.
+1.  **Deploy to Vercel:** Deploy the latest version of your application to Vercel.
+2.  **Generate a Quiz:** Open the deployed application in your browser and try to generate a new quiz by providing a Wikipedia URL.
+3.  **Verify Quiz Generation:** The application should now generate a new quiz based on the provided URL. You should no longer see the default sample data.
+
+If you continue to experience issues, please check the Vercel logs for any errors and provide them to me.

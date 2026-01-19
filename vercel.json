@@ -1,14 +1,14 @@
 {
-    "buildCommand": "pip install -r backend/requirements.txt && python backend/create_tables.py && npm run build",
+    "buildCommand": "pip install -r backend/requirements.txt && npm run build",
     "outputDirectory": "frontend/build",
     "rewrites": [
         {
             "source": "/api/(.*)",
-            "destination": "/api/$1"
+            "destination": "/api/index"
         }
     ],
     "functions": {
-        "api/**/*.py": {
+        "api/index.py": {
             "runtime": "python3.9",
             "maxDuration": 60
         }

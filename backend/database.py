@@ -15,14 +15,12 @@ except ImportError:
     engine = None
 
 # Check if running on Vercel (or any read-only environment)
-if os.environ.get("VERCEL") or os.environ.get("AWS_LAMBDA_FUNCTION_NAME"):
-    # For production/serverless, require DATABASE_URL (e.g., Supabase PostgreSQL)
-    DATABASE_URL = os.getenv("DATABASE_URL")
-    if not DATABASE_URL:
-        print("WARNING: DATABASE_URL not set. For production deployment, set DATABASE_URL to a PostgreSQL connection string (e.g., Supabase).")
-        # Fallback to SQLite for development, but it won't persist
-        DATABASE_URL = "sqlite:////tmp/quiz.db"
+if os.environ.get("VERCEL"):
+    # Vercel has a read-only filesystem, so we use /tmp for the database.
+    # This database will be ephemeral, new for each invocation.
+    DATABASE_URL = "sqlite:////tmp/quiz.db"
 else:
+    # For local development, use a file-based SQLite database.
     DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./quiz.db")
 
 if SQL_AVAILABLE:

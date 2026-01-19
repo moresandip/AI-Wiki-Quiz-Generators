@@ -86,7 +86,7 @@ function App() {
     setShowResults(false);
 
     const isProduction = process.env.NODE_ENV === 'production';
-    const apiUrl = isProduction ? '/api/generate-quiz' : 'http://localhost:8000/generate-quiz';
+    const apiUrl = isProduction ? '/api/quiz' : 'http://localhost:8000/quiz';
 
     try {
       const response = await fetch(apiUrl, {

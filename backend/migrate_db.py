@@ -1,55 +1,85 @@
+#!/usr/bin/env python3
 """
-Database migration script to add missing user_answers column to quizzes table.
-This fixes the sqlite3.OperationalError: no such column: quizzes.user_answers
+Database migration script to add missing columns to the quizzes table.
+This script handles adding the user_answers column that was missing from the database schema.
 """
-import sqlite3
+
 import os
 import sys
+from pathlib import Path
 
-def migrate_database(db_path='quiz.db'):
-    """Add user_answers column to quizzes table if it doesn't exist"""
-    
-    if not os.path.exists(db_path):
-        print(f"Database {db_path} does not exist. It will be created on first quiz generation.")
+# Add the backend directory to the path so we can import modules
+backend_dir = Path(__file__).parent
+sys.path.insert(0, str(backend_dir))
+
+from database import SQL_AVAILABLE, engine, SessionLocal
+from models import Quiz
+import logging
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+def migrate_database():
+    """Add missing columns to the quizzes table"""
+    if not SQL_AVAILABLE:
+        logger.info("SQL not available, skipping migration")
         return
-    
-    print(f"Migrating database: {db_path}")
-    
+
     try:
-        conn = sqlite3.connect(db_path)
-        cursor = conn.cursor()
-        
-        # Check current schema
-        cursor.execute("PRAGMA table_info(quizzes)")
-        columns = cursor.fetchall()
-        column_names = [col[1] for col in columns]
-        
-        print(f"Current columns: {column_names}")
-        
         # Check if user_answers column exists
-        if 'user_answers' not in column_names:
-            print("Adding user_answers column...")
-            cursor.execute("ALTER TABLE quizzes ADD COLUMN user_answers TEXT")
-            conn.commit()
-            print("✓ Successfully added user_answers column")
+        from sqlalchemy import inspect
+        inspector = inspect(engine)
+
+        # Get existing columns
+        existing_columns = [col['name'] for col in inspector.get_columns('quizzes')]
+
+        if 'user_answers' not in existing_columns:
+            logger.info("Adding user_answers column to quizzes table...")
+
+            # For SQLite, we need to recreate the table
+            if "sqlite" in str(engine.url):
+                # SQLite doesn't support ALTER TABLE ADD COLUMN with constraints easily
+                # We'll use a different approach - recreate the table
+                logger.info("SQLite detected, recreating table with new schema...")
+
+                # Create a backup table
+                with engine.connect() as conn:
+                    conn.execute("CREATE TABLE quizzes_backup AS SELECT * FROM quizzes")
+                    conn.execute("DROP TABLE quizzes")
+                    conn.commit()
+
+                # Recreate the table with the new schema
+                Quiz.__table__.create(engine)
+
+                # Restore data
+                conn.execute("""
+                    INSERT INTO quizzes (id, url, title, summary, data, created_at)
+                    SELECT id, url, title, summary, data, created_at FROM quizzes_backup
+                """)
+                conn.execute("DROP TABLE quizzes_backup")
+                conn.commit()
+
+                logger.info("Migration completed successfully!")
+            else:
+                # For other databases, use ALTER TABLE
+                from sqlalchemy import text
+                with engine.connect() as conn:
+                    # Determine JSON column type
+                    if "postgresql" in str(engine.url):
+                        json_type = "JSONB"
+                    else:
+                        json_type = "TEXT"
+
+                    conn.execute(text(f"ALTER TABLE quizzes ADD COLUMN user_answers {json_type}"))
+                    conn.commit()
+                    logger.info("Added user_answers column successfully!")
+
         else:
-            print("✓ user_answers column already exists")
-        
-        # Verify the change
-        cursor.execute("PRAGMA table_info(quizzes)")
-        columns = cursor.fetchall()
-        print(f"\nUpdated schema:")
-        for col in columns:
-            print(f"  - {col[1]} ({col[2]})")
-        
-        conn.close()
-        print("\n✓ Migration completed successfully!")
-        
+            logger.info("user_answers column already exists, no migration needed")
+
     except Exception as e:
-        print(f"✗ Migration failed: {e}")
-        sys.exit(1)
+        logger.error(f"Migration failed: {e}")
+        raise
 
 if __name__ == "__main__":
-    # Get database path from command line or use default
-    db_path = sys.argv[1] if len(sys.argv) > 1 else 'quiz.db'
-    migrate_database(db_path)
+    migrate_database()

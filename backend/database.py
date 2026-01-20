@@ -35,9 +35,17 @@ if SQL_AVAILABLE:
         Base = declarative_base()
     except Exception as e:
         print(f"WARNING: Database connection failed. Ensure DATABASE_URL is correct in .env. Error: {e}")
-        engine = None
-        SessionLocal = None
-        Base = object
+        # Try to create engine anyway for Vercel /tmp
+        try:
+            engine = create_engine(DATABASE_URL, connect_args=connect_args)
+            SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+            Base = declarative_base()
+            print("Engine created despite connection test failure")
+        except Exception as e2:
+            print(f"Failed to create engine: {e2}")
+            engine = None
+            SessionLocal = None
+            Base = object
 else:
     engine = None
     SessionLocal = None

@@ -9,15 +9,17 @@ import sys
 sys.path.append('./backend')
 
 from backend import models, schemas, scraper, llm, database
+from backend.create_tables import create_tables
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Ensure tables are created
-if database.SQL_AVAILABLE and database.engine:
-    models.Base.metadata.create_all(bind=database.engine)
-    logger.info("Database tables created (if not existed).")
+try:
+    create_tables()
+except Exception as e:
+    logger.error(f"Failed to create tables: {e}")
 
 class handler(BaseHTTPRequestHandler):
     def do_GET(self):
@@ -131,7 +133,7 @@ class handler(BaseHTTPRequestHandler):
                         url=url,
                         title=quiz_data.get("title"),
                         summary=quiz_data.get("summary"),
-                        data=quiz_data
+                        data=json.dumps(quiz_data)
                     )
                     db.add(db_quiz)
                     db.commit()
@@ -183,8 +185,8 @@ class handler(BaseHTTPRequestHandler):
                 "url": q.url,
                 "title": q.title,
                 "summary": q.summary,
-                "data": q.data,
-                "user_answers": q.user_answers,
+                "data": json.loads(q.data) if isinstance(q.data, str) else q.data,
+                "user_answers": json.loads(q.user_answers) if isinstance(q.user_answers, str) and q.user_answers else q.user_answers,
                 "created_at": q.created_at.isoformat()
             })
 
@@ -210,8 +212,8 @@ class handler(BaseHTTPRequestHandler):
             "url": quiz.url,
             "title": quiz.title,
             "summary": quiz.summary,
-            "data": quiz.data,
-            "user_answers": quiz.user_answers,
+            "data": json.loads(quiz.data) if isinstance(quiz.data, str) else quiz.data,
+            "user_answers": json.loads(quiz.user_answers) if isinstance(quiz.user_answers, str) and quiz.user_answers else quiz.user_answers,
             "created_at": quiz.created_at.isoformat()
         }
 
@@ -266,10 +268,15 @@ class handler(BaseHTTPRequestHandler):
             self.send_error(404, "Quiz not found")
             return
 
-        if quiz.data:
-            quiz.data["user_answers"] = user_answers
+        # Parse data if it's a string
+        quiz_data = json.loads(quiz.data) if isinstance(quiz.data, str) else quiz.data
+        if quiz_data:
+            quiz_data["user_answers"] = user_answers
         else:
-            quiz.data = {"user_answers": user_answers}
+            quiz_data = {"user_answers": user_answers}
+
+        quiz.data = json.dumps(quiz_data)
+        quiz.user_answers = json.dumps(user_answers)
 
         db.commit()
         db.refresh(quiz)
@@ -283,7 +290,7 @@ class handler(BaseHTTPRequestHandler):
             "url": quiz.url,
             "title": quiz.title,
             "summary": quiz.summary,
-            "data": quiz.data,
-            "user_answers": quiz.user_answers,
+            "data": json.loads(quiz.data) if isinstance(quiz.data, str) else quiz.data,
+            "user_answers": json.loads(quiz.user_answers) if isinstance(quiz.user_answers, str) and quiz.user_answers else quiz.user_answers,
             "created_at": quiz.created_at.isoformat()
         }}).encode())

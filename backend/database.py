@@ -16,46 +16,35 @@ except ImportError:
 
 # Check if running on Vercel (or any read-only environment)
 # Check if running on Vercel (or any read-only environment)
-if os.environ.get("VERCEL"):
-    # Vercel has a read-only filesystem, so we use /tmp for the database.
-    # This database will be ephemeral, new for each invocation.
-    DATABASE_URL = "sqlite:////tmp/quiz.db"
-else:
-    # For local development, use a file-based SQLite database.
-    # Use absolute path to ensure it works regardless of CWD
+# For Vercel, we now expect a persistent DATABASE_URL (Postgres)
+# If not provided, we fall back to local SQLite for development
+DATABASE_URL = os.getenv("DATABASE_URL")
+
+if not DATABASE_URL:
+    # Local development fallback
     BASE_DIR = os.path.dirname(os.path.abspath(__file__))
     DB_PATH = os.path.join(BASE_DIR, "quiz.db")
-    DATABASE_URL = os.getenv("DATABASE_URL", f"sqlite:///{DB_PATH}")
+    DATABASE_URL = f"sqlite:///{DB_PATH}"
 
 if SQL_AVAILABLE:
     # Check if SQLite is used, need check_same_thread=False
     connect_args = {"check_same_thread": False} if "sqlite" in DATABASE_URL else {}
 
-    # For Vercel, skip connection test as /tmp might not be immediately writable
-    if os.environ.get("VERCEL"):
-        try:
-            engine = create_engine(DATABASE_URL, connect_args=connect_args)
-            SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-            Base = declarative_base()
-            print("Engine created for Vercel")
-        except Exception as e:
-            print(f"Failed to create engine for Vercel: {e}")
-            engine = None
-            SessionLocal = None
-            Base = object
-    else:
-        try:
-            engine = create_engine(DATABASE_URL, connect_args=connect_args)
-            # Test the connection
-            with engine.connect() as conn:
-                pass
-            SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-            Base = declarative_base()
-        except Exception as e:
-            print(f"WARNING: Database connection failed. Ensure DATABASE_URL is correct in .env. Error: {e}")
-            engine = None
-            SessionLocal = None
-            Base = object
+    try:
+        engine = create_engine(DATABASE_URL, connect_args=connect_args)
+        # Test the connection
+        if "sqlite" not in DATABASE_URL:
+             # Optional: simpler test or skip for serverless if needed, 
+             # but usually good to fail fast if DB is unreachable
+             pass 
+        
+        SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+        Base = declarative_base()
+    except Exception as e:
+        print(f"WARNING: Database connection failed. Ensure DATABASE_URL is correct. Error: {e}")
+        engine = None
+        SessionLocal = None
+        Base = object
 else:
     engine = None
     SessionLocal = None

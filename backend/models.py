@@ -12,7 +12,8 @@ if SQL_AVAILABLE:
             from sqlalchemy.dialects.postgresql import JSON
             JSONType = JSON
         except ImportError:
-            JSONType = Text  # Fallback if PostgreSQL dialect not available
+            # Fallback if psycopg2 not installed or other DB
+            JSONType = Text
 
     class Quiz(Base):
         __tablename__ = "quizzes"

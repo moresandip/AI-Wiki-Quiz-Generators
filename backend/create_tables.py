@@ -12,7 +12,10 @@ backend_dir = Path(__file__).parent
 sys.path.insert(0, str(backend_dir))
 
 from database import SQL_AVAILABLE, engine, Base
-from models import Quiz
+try:
+    from models import Quiz
+except ImportError:
+    from backend.models import Quiz
 import logging
 
 logging.basicConfig(level=logging.INFO)

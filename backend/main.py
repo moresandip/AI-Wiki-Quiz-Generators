@@ -7,7 +7,16 @@ from pydantic import BaseModel
 from typing import List, Optional, Dict, Any
 
 # Import local modules
-from . import models, schemas, scraper, llm, database
+# Import local modules
+try:
+    from . import models, schemas, scraper, llm, database
+except ImportError:
+    # Fallback for running as a script or from inside backend dir
+    import models, schemas, scraper, llm, database
+
+# Create tables if they don't exist (for serverless environments like Vercel)
+# Moved to startup event to ensure models are loaded first
+
 
 # Configure logging
 logging.basicConfig(
@@ -44,8 +53,8 @@ def get_db():
 # Create tables on startup (essential for Vercel/SQLite)
 @app.on_event("startup")
 async def startup_event():
-    if database.SQL_AVAILABLE and database.engine:
-        models.Base.metadata.create_all(bind=database.engine)
+    # Ensure tables exist - REMOVED redundant check
+
         logger.info("Database tables created (if not existed).")
 
 @app.get("/")
@@ -59,8 +68,8 @@ def health_check():
 @app.post("/api/quiz", response_model=schemas.QuizResponse)
 def generate_quiz(request: schemas.QuizRequest, db: Session = Depends(get_db)):
     # Ensure tables exist
-    if database.SQL_AVAILABLE and database.engine:
-        models.Base.metadata.create_all(bind=database.engine)
+    # Ensure tables exist - REMOVED redundant check
+
 
     logger.info(f"Received quiz request for URL: {request.url}")
 
@@ -112,8 +121,8 @@ def generate_quiz(request: schemas.QuizRequest, db: Session = Depends(get_db)):
 @app.get("/api/quizzes", response_model=List[schemas.QuizResponse])
 def get_recent_quizzes(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
     # Ensure tables exist
-    if database.SQL_AVAILABLE and database.engine:
-        models.Base.metadata.create_all(bind=database.engine)
+    # Ensure tables exist - REMOVED redundant check
+
 
     if not db:
         return []
@@ -123,8 +132,8 @@ def get_recent_quizzes(skip: int = 0, limit: int = 10, db: Session = Depends(get
 @app.get("/api/quiz/{quiz_id}", response_model=schemas.QuizResponse)
 def get_quiz(quiz_id: int, db: Session = Depends(get_db)):
     # Ensure tables exist
-    if database.SQL_AVAILABLE and database.engine:
-        models.Base.metadata.create_all(bind=database.engine)
+    # Ensure tables exist - REMOVED redundant check
+
 
     if not db:
         raise HTTPException(status_code=503, detail="Database not available")
@@ -137,8 +146,8 @@ def get_quiz(quiz_id: int, db: Session = Depends(get_db)):
 @app.delete("/api/quiz/{quiz_id}")
 def delete_quiz(quiz_id: int, db: Session = Depends(get_db)):
     # Ensure tables exist
-    if database.SQL_AVAILABLE and database.engine:
-        models.Base.metadata.create_all(bind=database.engine)
+    # Ensure tables exist - REMOVED redundant check
+
 
     if not db:
         raise HTTPException(status_code=503, detail="Database not available")
@@ -155,8 +164,8 @@ def delete_quiz(quiz_id: int, db: Session = Depends(get_db)):
 @app.put("/api/quiz/{quiz_id}/save-results")
 def save_quiz_results(quiz_id: int, request: Dict[str, Any], db: Session = Depends(get_db)):
     # Ensure tables exist
-    if database.SQL_AVAILABLE and database.engine:
-        models.Base.metadata.create_all(bind=database.engine)
+    # Ensure tables exist - REMOVED redundant check
+
 
     if not db:
         raise HTTPException(status_code=503, detail="Database not available")

@@ -9,7 +9,7 @@ import sys
 sys.path.append('./backend')
 
 from backend import models, schemas, scraper, llm, database
-from backend.create_tables import create_tables
+# from backend.create_tables import create_tables # Removed to prevent issues
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -17,7 +17,9 @@ logger = logging.getLogger(__name__)
 
 # Ensure tables are created
 try:
-    create_tables()
+    if database.SQL_AVAILABLE and database.engine:
+        models.Base.metadata.create_all(bind=database.engine)
+        logger.info("Database tables created.")
 except Exception as e:
     logger.error(f"Failed to create tables: {e}")
 

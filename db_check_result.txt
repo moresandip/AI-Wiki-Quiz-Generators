@@ -1,0 +1,2 @@
+Checking DB at: C:\Users\mores\OneDrive\Desktop\AI Wiki Quiz Generator\backend\quiz.db
+Tables found: [('quizzes',)]

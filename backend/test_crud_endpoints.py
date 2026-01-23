@@ -1,9 +1,11 @@
 import requests
 import json
 import sys
+import os
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 import datetime
 
-BASE_URL = "http://localhost:8000"
+BASE_URL = "http://localhost:8000/api"
 
 def log(msg):
     print(f"[TEST] {msg}")

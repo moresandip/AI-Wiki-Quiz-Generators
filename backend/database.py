@@ -31,6 +31,7 @@ if SQL_AVAILABLE:
     connect_args = {"check_same_thread": False} if "sqlite" in DATABASE_URL else {}
 
     try:
+        print(f"Connecting to database at: {DATABASE_URL}")
         engine = create_engine(DATABASE_URL, connect_args=connect_args)
         # Test the connection
         if "sqlite" not in DATABASE_URL:

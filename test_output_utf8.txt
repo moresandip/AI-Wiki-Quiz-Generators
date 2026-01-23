@@ -1,0 +1,7 @@
+[TEST] Seeding database with dummy quiz...
+Connecting to database at: sqlite:///C:\Users\mores\OneDrive\Desktop\AI Wiki Quiz Generator\backend\quiz.db
+Connecting to database at: sqlite:///C:\Users\mores\OneDrive\Desktop\AI Wiki Quiz Generator\backend\quiz.db
+[TEST] Failed to seed DB: (sqlite3.ProgrammingError) Error binding parameter 4: type 'dict' is not supported
+[SQL: INSERT INTO quizzes (url, title, summary, data, user_answers, created_at) VALUES (?, ?, ?, ?, ?, ?)]
+[parameters: ('http://test-crud.com', 'Test CRUD Quiz', 'Test Summary', {'quiz': []}, None, '2026-01-23 19:50:06.531911')]
+(Background on this error at: https://sqlalche.me/e/20/f405)

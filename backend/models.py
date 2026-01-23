@@ -1,19 +1,33 @@
-from .database import Base, SQL_AVAILABLE, DATABASE_URL
+try:
+    from backend.database import Base, SQL_AVAILABLE, DATABASE_URL
+except ImportError:
+    try:
+        from database import Base, SQL_AVAILABLE, DATABASE_URL
+    except ImportError:
+        from .database import Base, SQL_AVAILABLE, DATABASE_URL
 
 if SQL_AVAILABLE:
     from sqlalchemy import Column, Integer, String, Text, DateTime
+    from sqlalchemy.types import TypeDecorator
     from sqlalchemy.sql import func
+    import json
 
-    # Determine JSON column type based on database
-    if "sqlite" in DATABASE_URL:
-        JSONType = Text
-    else:
-        try:
-            from sqlalchemy.dialects.postgresql import JSON
-            JSONType = JSON
-        except ImportError:
-            # Fallback if psycopg2 not installed or other DB
-            JSONType = Text
+    class JSONEncodedDict(TypeDecorator):
+        """Represents an immutable structure as a json-encoded string."""
+        impl = Text
+
+        def process_bind_param(self, value, dialect):
+            if value is None:
+                return None
+            return json.dumps(value)
+
+        def process_result_value(self, value, dialect):
+            if value is None:
+                return None
+            return json.loads(value)
+
+    # Use JSONEncodedDict for all databases to ensure consistency and SQLite support
+    JSONType = JSONEncodedDict
 
     class Quiz(Base):
         __tablename__ = "quizzes"

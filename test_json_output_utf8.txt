@@ -1,0 +1,42 @@
+Insert successful
+Select: {'key': 'value'} (Type: <class 'dict'>)
+Update successful
+python : Traceback 
+(most recent call 
+last):
+At line:1 char:1
++ python 
+test_json.py > 
+test_json_output.txt 
+2>&1
++ ~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~
+    + CategoryInfo   
+           : NotSpe  
+  cified: (Traceba   
+ ck (most recent     
+call last)::Stri    
+ng) [], RemoteEx    
+ception
+    + FullyQualified 
+   ErrorId : Native  
+  CommandError
+ 
+  File "C:\Users\more
+s\OneDrive\Desktop\AI
+ Wiki Quiz Generator\
+test_json.py", line 
+42, in <module>
+    
+os.remove(db_path)
+    
+~~~~~~~~~^^^^^^^^^
+PermissionError: 
+[WinError 32] The 
+process cannot 
+access the file 
+because it is being 
+used by another 
+process: 
+'test_json.db'

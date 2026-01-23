@@ -8,15 +8,30 @@ from typing import List, Optional, Dict, Any
 
 # Import local modules
 # Import local modules
+import sys
+from pathlib import Path
+
+# Add the project root to sys.path to allow absolute imports
+# This is necessary for Windows/Uvicorn reloading to work correctly
+backend_dir = Path(__file__).resolve().parent
+project_root = backend_dir.parent
+if str(project_root) not in sys.path:
+    sys.path.insert(0, str(project_root))
+
 try:
-    from . import models, schemas, scraper, llm, database
+    from backend import models, schemas, scraper, llm, database
 except ImportError:
-    # Fallback for running as a script or from inside backend dir
+    # Fallback if running directly from backend dir
     import models, schemas, scraper, llm, database
 
 # Create tables if they don't exist (for serverless environments like Vercel)
 # Moved to startup event to ensure models are loaded first
 
+# Import create_tables function
+try:
+    from create_tables import create_tables
+except ImportError:
+    from backend.create_tables import create_tables
 
 # Configure logging
 logging.basicConfig(
@@ -43,19 +58,22 @@ app.add_middleware(
 
 # Database dependency
 def get_db():
-    db = database.SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
+    if database.SessionLocal:
+        db = database.SessionLocal()
+        try:
+            yield db
+        finally:
+            db.close()
+    else:
+        yield None
 
 # Create tables if they don't exist
 # Create tables on startup (essential for Vercel/SQLite)
 @app.on_event("startup")
 async def startup_event():
-    # Ensure tables exist - REMOVED redundant check
-
-        logger.info("Database tables created (if not existed).")
+    # Ensure tables exist
+    create_tables()
+    logger.info("Database tables created (if not existed).")
 
 @app.get("/")
 def read_root():
@@ -123,11 +141,17 @@ def get_recent_quizzes(skip: int = 0, limit: int = 10, db: Session = Depends(get
     # Ensure tables exist
     # Ensure tables exist - REMOVED redundant check
 
-
+    logger.info(f"get_recent_quizzes called with skip={skip}, limit={limit}")
     if not db:
+        logger.info("No database connection")
         return []
-    quizzes = db.query(models.Quiz).order_by(models.Quiz.created_at.desc()).offset(skip).limit(limit).all()
-    return quizzes
+    try:
+        quizzes = db.query(models.Quiz).order_by(models.Quiz.created_at.desc()).offset(skip).limit(limit).all()
+        logger.info(f"Found {len(quizzes)} quizzes")
+        return quizzes
+    except Exception as e:
+        logger.error(f"Error querying quizzes: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
 
 @app.get("/api/quiz/{quiz_id}", response_model=schemas.QuizResponse)
 def get_quiz(quiz_id: int, db: Session = Depends(get_db)):

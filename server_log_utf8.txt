@@ -1,0 +1,186 @@
+Connecting to database at: sqlite:///C:\Users\mores\OneDrive\Desktop\AI Wiki Quiz Generator\backend\quiz.db
+Connecting to database at: sqlite:///C:\Users\mores\OneDrive\Desktop\AI Wiki Quiz Generator\backend\quiz.db
+python : Traceback 
+(most recent call 
+last):
+At line:1 char:1
++ python 
+backend/main.py > 
+server_log.txt 2>&1
++ ~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~
+~~~~
+    + CategoryInfo   
+           : NotSpe  
+  cified: (Traceba   
+ ck (most recent     
+call last)::Stri    
+ng) [], RemoteEx    
+ception
+    + FullyQualified 
+   ErrorId : Native  
+  CommandError
+ 
+  File "C:\Users\more
+s\OneDrive\Desktop\AI
+ Wiki Quiz Generator\
+backend\main.py", 
+line 32, in <module>
+    from 
+create_tables import 
+create_tables
+  File "C:\Users\more
+s\OneDrive\Desktop\AI
+ Wiki Quiz Generator\
+backend\create_tables
+.py", line 16, in 
+<module>
+    from models 
+import Quiz
+  File "C:\Users\more
+s\OneDrive\Desktop\AI
+ Wiki Quiz Generator\
+backend\models.py", 
+line 32, in <module>
+    class Quiz(Base):
+    ...<9 lines>...
+        created_at = 
+Column(DateTime(timez
+one=True), server_def
+ault=func.now())
+  File "C:\Users\more
+s\AppData\Local\Packa
+ges\PythonSoftwareFou
+ndation.Python.3.13_q
+bz5n2kfra8p0\LocalCac
+he\local-packages\Pyt
+hon313\site-packages\
+sqlalchemy\orm\decl_a
+pi.py", line 198, in 
+__init__
+    
+_as_declarative(reg, 
+cls, dict_)
+    ~~~~~~~~~~~~~~~^^
+^^^^^^^^^^^^^^^
+  File "C:\Users\more
+s\AppData\Local\Packa
+ges\PythonSoftwareFou
+ndation.Python.3.13_q
+bz5n2kfra8p0\LocalCac
+he\local-packages\Pyt
+hon313\site-packages\
+sqlalchemy\orm\decl_b
+ase.py", line 244, 
+in _as_declarative
+    return _MapperCon
+fig.setup_mapping(reg
+istry, cls, dict_, 
+None, {})
+           ~~~~~~~~~~
+~~~~~~~~~~~~~~~~~^^^^
+^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^
+  File "C:\Users\more
+s\AppData\Local\Packa
+ges\PythonSoftwareFou
+ndation.Python.3.13_q
+bz5n2kfra8p0\LocalCac
+he\local-packages\Pyt
+hon313\site-packages\
+sqlalchemy\orm\decl_b
+ase.py", line 325, 
+in setup_mapping
+    return _ClassScan
+MapperConfig(
+        registry, 
+cls_, dict_, table, 
+mapper_kw
+    )
+  File "C:\Users\more
+s\AppData\Local\Packa
+ges\PythonSoftwareFou
+ndation.Python.3.13_q
+bz5n2kfra8p0\LocalCac
+he\local-packages\Pyt
+hon313\site-packages\
+sqlalchemy\orm\decl_b
+ase.py", line 576, 
+in __init__
+    self._setup_table
+(table)
+    ~~~~~~~~~~~~~~~~~
+^^^^^^^
+  File "C:\Users\more
+s\AppData\Local\Packa
+ges\PythonSoftwareFou
+ndation.Python.3.13_q
+bz5n2kfra8p0\LocalCac
+he\local-packages\Pyt
+hon313\site-packages\
+sqlalchemy\orm\decl_b
+ase.py", line 1755, 
+in _setup_table
+    table_cls(
+    ~~~~~~~~~^
+        tablename,
+        ^^^^^^^^^^
+    ...<3 lines>...
+        **table_kw,
+        ^^^^^^^^^^^
+    ),
+    ^
+  File "<string>", 
+line 2, in __new__
+  File "C:\Users\more
+s\AppData\Local\Packa
+ges\PythonSoftwareFou
+ndation.Python.3.13_q
+bz5n2kfra8p0\LocalCac
+he\local-packages\Pyt
+hon313\site-packages\
+sqlalchemy\util\depre
+cations.py", line 
+281, in warned
+    return fn(*args, 
+**kwargs)  # type: 
+ignore[no-any-return]
+  File "C:\Users\more
+s\AppData\Local\Packa
+ges\PythonSoftwareFou
+ndation.Python.3.13_q
+bz5n2kfra8p0\LocalCac
+he\local-packages\Pyt
+hon313\site-packages\
+sqlalchemy\sql\schema
+.py", line 429, in 
+__new__
+    return 
+cls._new(*args, **kw)
+           
+~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\more
+s\AppData\Local\Packa
+ges\PythonSoftwareFou
+ndation.Python.3.13_q
+bz5n2kfra8p0\LocalCac
+he\local-packages\Pyt
+hon313\site-packages\
+sqlalchemy\sql\schema
+.py", line 461, in 
+_new
+    raise exc.Invalid
+RequestError(
+    ...<5 lines>...
+    )
+sqlalchemy.exc.Invali
+dRequestError: Table 
+'quizzes' is already 
+defined for this 
+MetaData instance.  
+Specify 'extend_exist
+ing=True' to 
+redefine options and 
+columns on an 
+existing Table 
+object.

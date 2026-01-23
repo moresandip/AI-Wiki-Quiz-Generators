@@ -1,0 +1,43 @@
+2026-01-22 15:04:51,260 [INFO] Database tables created (if not existed).
+2026-01-22 15:15:36,376 [INFO] Database tables created (if not existed).
+2026-01-22 15:16:49,609 [INFO] Received quiz request for URL: https://en.wikipedia.org/wiki/Virat_Koh
+2026-01-22 15:16:49,610 [INFO] Scraping Wikipedia...
+2026-01-22 15:16:52,807 [ERROR] ValueError: Wikipedia page not found: https://en.wikipedia.org/wiki/Virat_Koh
+Please check the URL and try again.
+2026-01-22 15:16:59,202 [INFO] Received quiz request for URL: https://en.wikipedia.org/wiki/Virat_Kohli
+2026-01-22 15:16:59,202 [INFO] Scraping Wikipedia...
+2026-01-22 15:17:01,575 [INFO] Scraping successful. Title: Virat Kohli
+2026-01-22 15:17:01,576 [INFO] Generating quiz with LLM...
+2026-01-22 15:17:04,589 [INFO] Quiz generation successful
+2026-01-22 15:17:04,734 [ERROR] Failed to save to database: (sqlite3.ProgrammingError) Error binding parameter 4: type 'dict' is not supported
+[SQL: INSERT INTO quizzes (url, title, summary, data, user_answers) VALUES (?, ?, ?, ?, ?) RETURNING id, created_at]
+[parameters: ('https://en.wikipedia.org/wiki/Virat_Kohli', 'Virat Kohli', 'Virat Kohli[a](born 5 November 1988) is an Indianinternational cricketerand the former all-formatcaptainof theIndian national cricket team.[3]He is a ... (492 characters truncated) ... st captain of India with most wins and 3 consecutiveTest maceretainments.[6]He is the only batter to earn 900+ rating points across all 3 formats.[7]', {'title': 'Virat Kohli', 'summary': 'Virat Kohli[a](born 5 November 1988) is an Indianinternational cricketerand the former all-formatcaptainof theInd ... (1982 characters truncated) ...  'The Turing Test is a method of inquiry in artificial intelligence for determining whether or not a computer is capable of thinking like a human.'}]}, None)]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2026-01-22 15:17:54,655 [INFO] Received quiz request for URL: https://en.wikipedia.org/wiki/Virat_Kohli
+2026-01-22 15:17:54,656 [INFO] Scraping Wikipedia...
+2026-01-22 15:17:57,095 [INFO] Scraping successful. Title: Virat Kohli
+2026-01-22 15:17:57,096 [INFO] Generating quiz with LLM...
+2026-01-22 15:18:00,291 [INFO] Quiz generation successful
+2026-01-22 15:18:00,294 [ERROR] Failed to save to database: (sqlite3.ProgrammingError) Error binding parameter 4: type 'dict' is not supported
+[SQL: INSERT INTO quizzes (url, title, summary, data, user_answers) VALUES (?, ?, ?, ?, ?) RETURNING id, created_at]
+[parameters: ('https://en.wikipedia.org/wiki/Virat_Kohli', 'Virat Kohli', 'Virat Kohli[a](born 5 November 1988) is an Indianinternational cricketerand the former all-formatcaptainof theIndian national cricket team.[3]He is a ... (492 characters truncated) ... st captain of India with most wins and 3 consecutiveTest maceretainments.[6]He is the only batter to earn 900+ rating points across all 3 formats.[7]', {'title': 'Virat Kohli', 'summary': 'Virat Kohli[a](born 5 November 1988) is an Indianinternational cricketerand the former all-formatcaptainof theInd ... (1982 characters truncated) ...  'The Turing Test is a method of inquiry in artificial intelligence for determining whether or not a computer is capable of thinking like a human.'}]}, None)]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2026-01-22 15:18:05,300 [INFO] Received quiz request for URL: https://en.wikipedia.org/wiki/Virat_Kohli
+2026-01-22 15:18:05,301 [INFO] Scraping Wikipedia...
+2026-01-22 15:18:07,663 [INFO] Scraping successful. Title: Virat Kohli
+2026-01-22 15:18:07,664 [INFO] Generating quiz with LLM...
+2026-01-22 15:18:11,306 [INFO] Quiz generation successful
+2026-01-22 15:18:11,308 [ERROR] Failed to save to database: (sqlite3.ProgrammingError) Error binding parameter 4: type 'dict' is not supported
+[SQL: INSERT INTO quizzes (url, title, summary, data, user_answers) VALUES (?, ?, ?, ?, ?) RETURNING id, created_at]
+[parameters: ('https://en.wikipedia.org/wiki/Virat_Kohli', 'Virat Kohli', 'Virat Kohli[a](born 5 November 1988) is an Indianinternational cricketerand the former all-formatcaptainof theIndian national cricket team.[3]He is a ... (492 characters truncated) ... st captain of India with most wins and 3 consecutiveTest maceretainments.[6]He is the only batter to earn 900+ rating points across all 3 formats.[7]', {'title': 'Virat Kohli', 'summary': 'Virat Kohli[a](born 5 November 1988) is an Indianinternational cricketerand the former all-formatcaptainof theInd ... (1982 characters truncated) ...  'The Turing Test is a method of inquiry in artificial intelligence for determining whether or not a computer is capable of thinking like a human.'}]}, None)]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2026-01-22 15:22:04,276 [INFO] Database tables created (if not existed).
+2026-01-22 15:27:33,534 [INFO] Received quiz request for URL: https://en.wikipedia.org/wiki/Virat_Kohli
+2026-01-22 15:27:33,542 [INFO] Scraping Wikipedia...
+2026-01-22 15:27:36,009 [INFO] Scraping successful. Title: Virat Kohli
+2026-01-22 15:27:36,010 [INFO] Generating quiz with LLM...
+2026-01-22 15:27:38,474 [INFO] Quiz generation successful
+2026-01-22 15:27:38,614 [ERROR] Failed to save to database: (sqlite3.ProgrammingError) Error binding parameter 4: type 'dict' is not supported
+[SQL: INSERT INTO quizzes (url, title, summary, data, user_answers) VALUES (?, ?, ?, ?, ?) RETURNING id, created_at]
+[parameters: ('https://en.wikipedia.org/wiki/Virat_Kohli', 'Virat Kohli', 'Virat Kohli[a](born 5 November 1988) is an Indianinternational cricketerand the former all-formatcaptainof theIndian national cricket team.[3]He is a ... (492 characters truncated) ... st captain of India with most wins and 3 consecutiveTest maceretainments.[6]He is the only batter to earn 900+ rating points across all 3 formats.[7]', {'title': 'Virat Kohli', 'summary': 'Virat Kohli[a](born 5 November 1988) is an Indianinternational cricketerand the former all-formatcaptainof theInd ... (1985 characters truncated) ...  'The Turing Test is a method of inquiry in artificial intelligence for determining whether or not a computer is capable of thinking like a human.'}]}, None)]
+(Background on this error at: https://sqlalche.me/e/20/f405)

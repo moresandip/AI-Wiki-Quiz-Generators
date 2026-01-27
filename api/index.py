@@ -5,9 +5,6 @@ from urllib.parse import urlparse, parse_qs
 from http.server import BaseHTTPRequestHandler
 
 # Import backend modules
-import sys
-sys.path.append('./backend')
-
 from backend import models, schemas, scraper, llm, database
 # from backend.create_tables import create_tables # Removed to prevent issues
 

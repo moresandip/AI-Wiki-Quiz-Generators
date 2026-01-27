@@ -85,7 +85,7 @@ Key Entities: {key_entities}
 Full Text: {full_text}
 
 Instructions:
-1. Generate 5-10 multiple-choice questions. 
+1. Generate 5 multiple-choice questions. 
 2. **IMPORTANT**: Focus on different aspects of the article than typical generic questions.
 3. **STRICT CONSTRAINT**: You must use ONLY the provided text to generate questions and answers. Do not use your internal knowledge base. If a fact is not in the text, do not ask about it.
 4. Each question must have 4 options (A, B, C, D).
@@ -218,7 +218,7 @@ def generate_quiz_data(scraped_data):
             summary=scraped_data["summary"],
             sections=", ".join(scraped_data["sections"]),
             key_entities=json.dumps(scraped_data["key_entities"]),
-            full_text=scraped_data["full_text"][:6000]
+            full_text=scraped_data["full_text"][:4000]
         )
 
         content = ""

@@ -16,6 +16,7 @@ if not exist "backend\.env" (
     exit /b 1
 )
 
+
 :: Check for API key in .env (simple check)
 findstr "GOOGLE_API_KEY" "backend\.env" >nul
 if %errorlevel% neq 0 (

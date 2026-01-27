@@ -165,9 +165,9 @@ def generate_with_openrouter(api_key, prompt_text):
 
 def generate_with_gemini(api_key, prompt_text):
     """Generate content using Google Gemini API"""
-    models_to_try = ["gemini-1.5-flash", "gemini-1.5-pro", "gemini-pro"]
+    models_to_try = ["gemini-1.5-flash-latest", "gemini-1.5-pro-latest", "gemini-1.5-flash", "gemini-1.5-pro"]
     last_error = None
-    
+
     for model_name in models_to_try:
         try:
             log_to_file(f"Attempting Gemini with model: {model_name}")
@@ -182,20 +182,20 @@ def generate_with_gemini(api_key, prompt_text):
                     "maxOutputTokens": 2048,
                 }
             }
-            
+
             response = requests.post(url, headers=headers, json=data, timeout=60)
-            
+
             if response.status_code != 200:
                 raise Exception(f"API Error {response.status_code}: {response.text}")
-                
+
             result = response.json()
             return result['candidates'][0]['content']['parts'][0]['text']
-            
+
         except Exception as e:
             last_error = e
             log_to_file(f"Gemini model {model_name} failed: {str(e)}")
             continue
-            
+
     raise Exception(f"All Gemini models failed. Last error: {last_error}")
 
 def generate_quiz_data(scraped_data):
@@ -204,7 +204,9 @@ def generate_quiz_data(scraped_data):
     """
     google_key = os.getenv("GOOGLE_API_KEY")
     openrouter_key = os.getenv("OPENROUTER_API_KEY")
-    
+
+    log_to_file(f"API Keys - Google: {'Set' if google_key else 'Not set'}, OpenRouter: {'Set' if openrouter_key else 'Not set'}")
+
     if not google_key and not openrouter_key:
          log_to_file("CRITICAL ERROR: No API key set. Falling back to sample data.")
          raise ValueError("No API key configured (GOOGLE_API_KEY or OPENROUTER_API_KEY)")
@@ -222,11 +224,13 @@ def generate_quiz_data(scraped_data):
         )
 
         content = ""
-        
+
         # Prefer OpenRouter if available (since user explicitly provided it)
         if openrouter_key:
+            log_to_file("Using OpenRouter API for quiz generation")
             content = generate_with_openrouter(openrouter_key, prompt_text)
         elif google_key:
+            log_to_file("Using Google Gemini API for quiz generation")
             content = generate_with_gemini(google_key, prompt_text)
 
         # Clean up content

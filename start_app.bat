@@ -18,16 +18,15 @@ if not exist "backend\.env" (
 
 
 :: Check for API key in .env (simple check)
-findstr "GOOGLE_API_KEY" "backend\.env" >nul
+:: Check for API key in .env (checks for either GOOGLE_API_KEY or OPENROUTER_API_KEY)
+:: Check for API key in .env (checks for either GOOGLE_API_KEY or OPENROUTER_API_KEY)
+findstr "GOOGLE_API_KEY OPENROUTER_API_KEY" "backend\.env" >nul
 if %errorlevel% neq 0 (
-    findstr "OPENROUTER_API_KEY" "backend\.env" >nul
-    if %errorlevel% neq 0 (
-        echo [WARNING] No API key found in backend\.env!
-        echo Please add GOOGLE_API_KEY or OPENROUTER_API_KEY to backend\.env
-        echo.
-        pause
-        exit /b 1
-    )
+    echo [WARNING] No API key found in backend\.env!
+    echo Please add GOOGLE_API_KEY or OPENROUTER_API_KEY to backend\.env
+    echo.
+    pause
+    exit /b 1
 )
 
 :: Check if port 8000 is already in use

@@ -3046,3 +3046,101 @@ ValueError: Failed to generate quiz with any model. Last error: API Error 404: {
 }
 
 [2026-01-27 20:27:51] [LLM] Falling back to SAMPLE DATA (Demo Mode)
+[2026-01-27 20:54:25] [SCRAPER] Scraping URL: https://en.wikipedia.org/wiki/MS_Dhoni
+[2026-01-27 20:54:35] [LLM] Generating quiz for: MS Dhoni
+[2026-01-27 20:54:35] [LLM] Attempting Gemini with model: gemini-1.5-flash
+[2026-01-27 20:54:36] [LLM] Gemini model gemini-1.5-flash failed: API Error 400: {
+  "error": {
+    "code": 400,
+    "message": "API key not valid. Please pass a valid API key.",
+    "status": "INVALID_ARGUMENT",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "API_KEY_INVALID",
+        "domain": "googleapis.com",
+        "metadata": {
+          "service": "generativelanguage.googleapis.com"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.LocalizedMessage",
+        "locale": "en-US",
+        "message": "API key not valid. Please pass a valid API key."
+      }
+    ]
+  }
+}
+
+[2026-01-27 20:54:36] [LLM] Attempting Gemini with model: gemini-1.5-pro
+[2026-01-27 20:54:38] [LLM] Gemini model gemini-1.5-pro failed: API Error 400: {
+  "error": {
+    "code": 400,
+    "message": "API key not valid. Please pass a valid API key.",
+    "status": "INVALID_ARGUMENT",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "API_KEY_INVALID",
+        "domain": "googleapis.com",
+        "metadata": {
+          "service": "generativelanguage.googleapis.com"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.LocalizedMessage",
+        "locale": "en-US",
+        "message": "API key not valid. Please pass a valid API key."
+      }
+    ]
+  }
+}
+
+[2026-01-27 20:54:38] [LLM] Attempting Gemini with model: gemini-pro
+[2026-01-27 20:54:39] [LLM] Gemini model gemini-pro failed: API Error 400: {
+  "error": {
+    "code": 400,
+    "message": "API key not valid. Please pass a valid API key.",
+    "status": "INVALID_ARGUMENT",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "API_KEY_INVALID",
+        "domain": "googleapis.com",
+        "metadata": {
+          "service": "generativelanguage.googleapis.com"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.LocalizedMessage",
+        "locale": "en-US",
+        "message": "API key not valid. Please pass a valid API key."
+      }
+    ]
+  }
+}
+
+[2026-01-27 20:54:39] [LLM] Quiz generation failed: All Gemini models failed. Last error: API Error 400: {
+  "error": {
+    "code": 400,
+    "message": "API key not valid. Please pass a valid API key.",
+    "status": "INVALID_ARGUMENT",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "API_KEY_INVALID",
+        "domain": "googleapis.com",
+        "metadata": {
+          "service": "generativelanguage.googleapis.com"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.LocalizedMessage",
+        "locale": "en-US",
+        "message": "API key not valid. Please pass a valid API key."
+      }
+    ]
+  }
+}
+
+[2026-01-27 20:54:39] [LLM] Falling back to SAMPLE DATA (Demo Mode)

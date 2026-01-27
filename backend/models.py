@@ -31,6 +31,7 @@ if SQL_AVAILABLE:
 
     class Quiz(Base):
         __tablename__ = "quizzes"
+        __table_args__ = {'extend_existing': True}
 
         id = Column(Integer, primary_key=True, index=True)
         url = Column(String, unique=False, index=True, nullable=False)

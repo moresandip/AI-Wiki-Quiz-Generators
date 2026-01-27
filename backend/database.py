@@ -21,10 +21,18 @@ except ImportError:
 DATABASE_URL = os.getenv("DATABASE_URL")
 
 if not DATABASE_URL:
-    # Local development fallback
-    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-    DB_PATH = os.path.join(BASE_DIR, "quiz.db")
-    DATABASE_URL = f"sqlite:///{DB_PATH}"
+    # Check if running on Vercel
+    if os.getenv("VERCEL"):
+        # Vercel filesystem is read-only except for /tmp
+        # Note: Data will be lost when the function instance is recycled
+        DB_PATH = "/tmp/quiz.db"
+        DATABASE_URL = f"sqlite:///{DB_PATH}"
+        print(f"Running on Vercel, using ephemeral DB at: {DB_PATH}")
+    else:
+        # Local development fallback
+        BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+        DB_PATH = os.path.join(BASE_DIR, "quiz.db")
+        DATABASE_URL = f"sqlite:///{DB_PATH}"
 
 if SQL_AVAILABLE:
     # Check if SQLite is used, need check_same_thread=False

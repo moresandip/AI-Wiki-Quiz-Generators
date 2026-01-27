@@ -98,8 +98,15 @@ function App() {
       });
 
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.detail || 'Failed to generate quiz. Please check the URL and try again.');
+        let errorMessage = 'Failed to generate quiz. Please check the URL and try again.';
+        try {
+          const errorData = await response.json();
+          errorMessage = errorData.detail || errorMessage;
+        } catch (e) {
+          const text = await response.text();
+          errorMessage = `Error ${response.status}: ${text.slice(0, 100)}`;
+        }
+        throw new Error(errorMessage);
       }
 
       const data = await response.json();

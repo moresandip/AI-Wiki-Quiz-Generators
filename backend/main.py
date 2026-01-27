@@ -58,6 +58,9 @@ app.add_middleware(
 
 # Database dependency
 def get_db():
+    # Ensure tables exist (lazy check for serverless SQLite)
+    database.init_db()
+    
     if database.SessionLocal:
         db = database.SessionLocal()
         try:

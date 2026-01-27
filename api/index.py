@@ -91,6 +91,9 @@ class handler(BaseHTTPRequestHandler):
             self.send_error(500, str(e))
 
     def get_db(self):
+        # Ensure tables exist
+        database.init_db()
+
         if not database.SessionLocal:
             return None
         db = database.SessionLocal()
@@ -112,9 +115,7 @@ class handler(BaseHTTPRequestHandler):
         logger.info(f"Received quiz request for URL: {url}")
 
         # Ensure tables exist
-        if database.SQL_AVAILABLE and database.engine:
-            models.Base.metadata.create_all(bind=database.engine)
-            logger.info("Database tables created (if not existed).")
+        database.init_db()
 
         try:
             # Scrape

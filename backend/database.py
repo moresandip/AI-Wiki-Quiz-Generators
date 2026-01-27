@@ -76,3 +76,15 @@ def get_db():
 # REMOVED: Automatic table creation on import caused circular dependency issues.
 # Tables should be created explicitly in main.py startup event or via create_tables.py script.
 
+def init_db():
+    """
+    Ensure tables exist. This is idempotent and safe to call.
+    Useful for serverless environments where /tmp might be wiped.
+    """
+    if SQL_AVAILABLE and engine:
+        try:
+            Base.metadata.create_all(bind=engine)
+        except Exception as e:
+            print(f"Error creating tables: {e}")
+
+

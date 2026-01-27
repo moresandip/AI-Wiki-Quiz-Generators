@@ -3,5 +3,6 @@ uvicorn
 beautifulsoup4
 requests
 python-dotenv
+psycopg2-binary
 pydantic
 sqlalchemy

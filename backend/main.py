@@ -146,7 +146,8 @@ def generate_quiz(request: schemas.QuizRequest, db: Session = Depends(get_db)):
                 logger.info(f"Saved quiz to database with ID: {db_quiz.id}")
             except Exception as e:
                 logger.error(f"Failed to save to database: {e}")
-                # Continue even if DB save fails
+                # Continue even if DB save fails - do not raise HTTPException
+                db_quiz = None
         
         return {
             "id": db_quiz.id if db_quiz else None,

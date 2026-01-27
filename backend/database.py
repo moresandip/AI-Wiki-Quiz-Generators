@@ -85,14 +85,16 @@ def init_db():
         try:
             # Import models locally to ensure they are registered with Base.metadata
             # This avoids circular imports at the top level
+            print(f"Initializing DB at {DATABASE_URL}")
+            # Force import models to register them
             try:
                 from . import models
+                print("Imported models from .")
             except ImportError:
                 import models
+                print("Imported models directly")
 
-            print(f"Initializing DB at {DATABASE_URL}")
-            print(f"Registered tables: {Base.metadata.tables.keys()}")
-            
+            print(f"Registered tables before create: {Base.metadata.tables.keys()}")
             Base.metadata.create_all(bind=engine)
             print("Tables created successfully.")
         except Exception as e:

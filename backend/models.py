@@ -1,10 +1,7 @@
 try:
-    from backend.database import Base, SQL_AVAILABLE, DATABASE_URL
+    from .database import Base, SQL_AVAILABLE, DATABASE_URL
 except ImportError:
-    try:
-        from database import Base, SQL_AVAILABLE, DATABASE_URL
-    except ImportError:
-        from .database import Base, SQL_AVAILABLE, DATABASE_URL
+    from database import Base, SQL_AVAILABLE, DATABASE_URL
 
 if SQL_AVAILABLE:
     from sqlalchemy import Column, Integer, String, Text, DateTime

@@ -86,6 +86,31 @@ def read_root():
 def health_check():
     return {"status": "ok"}
 
+@app.get("/api/debug")
+def debug_info():
+    import os
+    from sqlalchemy import inspect
+    
+    db_path = "Unknown"
+    if database.DATABASE_URL:
+        db_path = database.DATABASE_URL
+        
+    tables = []
+    if database.engine:
+        try:
+            inspector = inspect(database.engine)
+            tables = inspector.get_table_names()
+        except Exception as e:
+            tables = [f"Error: {str(e)}"]
+            
+    return {
+        "database_url": db_path,
+        "tables": tables,
+        "vercel_env": os.environ.get("VERCEL", "Not set"),
+        "tmp_files": os.listdir("/tmp") if os.path.exists("/tmp") else "No /tmp",
+        "cwd": os.getcwd()
+    }
+
 @app.post("/api/quiz", response_model=schemas.QuizResponse)
 def generate_quiz(request: schemas.QuizRequest, db: Session = Depends(get_db)):
     # Ensure tables exist

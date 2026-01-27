@@ -34,6 +34,8 @@ class handler(BaseHTTPRequestHandler):
                 self.wfile.write(json.dumps({"message": "AI Wiki Quiz Generator API is running"}).encode())
             elif path == '/api/quizzes':
                 self.handle_get_quizzes()
+            elif path == '/api/debug':
+                self.handle_debug()
             elif path.startswith('/api/quiz/'):
                 parts = path.split('/')
                 if len(parts) == 4 and parts[3].isdigit():
@@ -101,6 +103,35 @@ class handler(BaseHTTPRequestHandler):
             yield db
         finally:
             db.close()
+
+    def handle_debug(self):
+        import os
+        from sqlalchemy import inspect
+        
+        db_path = "Unknown"
+        if database.DATABASE_URL:
+            db_path = database.DATABASE_URL
+            
+        tables = []
+        if database.engine:
+            try:
+                inspector = inspect(database.engine)
+                tables = inspector.get_table_names()
+            except Exception as e:
+                tables = [f"Error: {str(e)}"]
+                
+        response = {
+            "database_url": db_path,
+            "tables": tables,
+            "vercel_env": os.environ.get("VERCEL", "Not set"),
+            "tmp_files": os.listdir("/tmp") if os.path.exists("/tmp") else "No /tmp",
+            "cwd": os.getcwd()
+        }
+        
+        self.send_response(200)
+        self.send_header('Content-type', 'application/json')
+        self.end_headers()
+        self.wfile.write(json.dumps(response).encode())
 
     def handle_generate_quiz(self):
         content_length = int(self.headers['Content-Length'])

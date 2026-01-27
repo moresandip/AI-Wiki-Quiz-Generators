@@ -83,7 +83,18 @@ def init_db():
     """
     if SQL_AVAILABLE and engine:
         try:
+            # Import models locally to ensure they are registered with Base.metadata
+            # This avoids circular imports at the top level
+            try:
+                from . import models
+            except ImportError:
+                import models
+
+            print(f"Initializing DB at {DATABASE_URL}")
+            print(f"Registered tables: {Base.metadata.tables.keys()}")
+            
             Base.metadata.create_all(bind=engine)
+            print("Tables created successfully.")
         except Exception as e:
             print(f"Error creating tables: {e}")
 

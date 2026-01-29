@@ -225,10 +225,18 @@ def generate_quiz_data(scraped_data):
 
         content = ""
 
-        # Prefer OpenRouter if available (since user explicitly provided it)
+        # Try OpenRouter first if available, then fall back to Google
         if openrouter_key:
-            log_to_file("Using OpenRouter API for quiz generation")
-            content = generate_with_openrouter(openrouter_key, prompt_text)
+            try:
+                log_to_file("Using OpenRouter API for quiz generation")
+                content = generate_with_openrouter(openrouter_key, prompt_text)
+            except Exception as e:
+                log_to_file(f"OpenRouter failed, trying Google Gemini: {e}")
+                if google_key:
+                    log_to_file("Using Google Gemini API for quiz generation (fallback)")
+                    content = generate_with_gemini(google_key, prompt_text)
+                else:
+                    raise e
         elif google_key:
             log_to_file("Using Google Gemini API for quiz generation")
             content = generate_with_gemini(google_key, prompt_text)

@@ -3314,3 +3314,6 @@ ValueError: Failed to generate quiz with any model. Last error: API Error 404: {
 [2026-01-29 15:23:57] [SCRAPER] Scraping URL: https://en.wikipedia.org/wiki/MS_Dhoni
 [2026-01-29 15:23:59] [LLM] API Keys - Google: Not set
 [2026-01-29 15:23:59] [LLM] CRITICAL ERROR: No API key set. Falling back to sample data.
+[2026-01-29 15:29:43] [SCRAPER] Scraping URL: https://en.wikipedia.org/wiki/MS_Dhoni
+[2026-01-29 15:29:46] [LLM] API Keys - Google: Not set
+[2026-01-29 15:29:46] [LLM] CRITICAL ERROR: No API key set. Falling back to sample data.

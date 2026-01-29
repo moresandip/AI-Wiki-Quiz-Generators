@@ -23,7 +23,9 @@ except Exception as e:
     print(f"Warning: Could not load sample data: {e}")
 
 # Load environment variables from .env file
-load_dotenv()
+# Load environment variables from .env file
+DOTENV_PATH = os.path.join(os.path.dirname(__file__), '..', '.env')
+load_dotenv(DOTENV_PATH)
 
 def list_available_models():
     """List available models based on configured API key"""
@@ -46,10 +48,14 @@ def test_api_connection():
     if google_key:
         # Test Google Key
         try:
-            url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash?key={google_key}"
+            url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest?key={google_key}"
             response = requests.get(url, timeout=10)
             if response.status_code == 200:
                 return True, "Google Gemini API key is valid"
+            else:
+                log_to_file(f"Google API Verification Failed: {response.status_code} - {response.text}")
+                if not openrouter_key:
+                     return False, f"Google API Verification Failed: {response.status_code} - {response.text}"
         except Exception as e:
             if not openrouter_key:
                 return False, f"Google API test failed: {str(e)}"
@@ -110,7 +116,7 @@ Output strictly valid JSON only.
 
 def generate_with_gemini(api_key, prompt_text):
     """Generate content using Google Gemini API"""
-    models_to_try = ["gemini-1.5-flash", "gemini-1.5-pro", "gemini-pro"]
+    models_to_try = ["gemini-2.0-flash", "gemini-flash-latest", "gemini-1.5-flash-latest", "gemini-1.5-pro-latest", "gemini-1.5-flash", "gemini-1.5-pro"]
     last_error = None
 
     for model_name in models_to_try:

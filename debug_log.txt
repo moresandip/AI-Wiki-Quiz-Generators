@@ -554,3 +554,11 @@
   }
 }
 
+[2026-01-29 15:34:13] [LLM] Google API Verification Failed: 404 - {
+  "error": {
+    "code": 404,
+    "message": "Model is not found: models/gemini-1.5-flash for api version v1beta",
+    "status": "NOT_FOUND"
+  }
+}
+

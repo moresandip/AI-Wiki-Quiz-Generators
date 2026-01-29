@@ -258,16 +258,8 @@ def generate_quiz_data(scraped_data):
     except Exception as e:
         log_to_file(f"Quiz generation failed: {e}")
         print(f"Quiz generation failed: {e}")
+        print(f"Exception type: {type(e).__name__}")
+        print(f"Exception message: {str(e)}")
 
-        if SAMPLE_QUIZ_DATA:
-            log_to_file("Falling back to SAMPLE DATA (Demo Mode)")
-            print("Falling back to SAMPLE DATA (Demo Mode)")
-            return {
-                "title": scraped_data['title'],
-                "summary": scraped_data['summary'],
-                "key_entities": scraped_data["key_entities"],
-                "sections": scraped_data["sections"],
-                "quiz": SAMPLE_QUIZ_DATA["quiz"]
-            }
-        else:
-            raise e
+        # Don't fall back to sample data - raise the error so user knows
+        raise ValueError(f"Quiz generation failed: {str(e)}. Please check your API keys (GOOGLE_API_KEY or OPENROUTER_API_KEY) in the .env file.")

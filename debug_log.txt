@@ -426,3 +426,17 @@
 }
 
 [2026-01-22 15:27:38] [LLM] Falling back to SAMPLE DATA (Demo Mode)
+[2026-01-29 10:56:25] [LLM] API Keys - Google: Set, OpenRouter: Set
+[2026-01-29 10:56:25] [LLM] Generating quiz for: Test Article: Artificial Intelligence
+[2026-01-29 10:56:25] [LLM] Using OpenRouter API for quiz generation
+[2026-01-29 10:56:25] [LLM] Attempting OpenRouter with model: google/gemini-2.0-flash-lite-preview-02-05:free
+[2026-01-29 10:56:27] [LLM] OpenRouter Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-29 10:56:27] [LLM] OpenRouter model google/gemini-2.0-flash-lite-preview-02-05:free failed: OpenRouter Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-29 10:56:27] [LLM] Attempting OpenRouter with model: google/gemini-2.0-pro-exp-02-05:free
+[2026-01-29 10:56:30] [LLM] OpenRouter Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-29 10:56:30] [LLM] OpenRouter model google/gemini-2.0-pro-exp-02-05:free failed: OpenRouter Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-29 10:56:30] [LLM] Attempting OpenRouter with model: deepseek/deepseek-r1:free
+[2026-01-29 10:56:30] [LLM] OpenRouter Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-29 10:56:30] [LLM] OpenRouter model deepseek/deepseek-r1:free failed: OpenRouter Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-29 10:56:30] [LLM] Quiz generation failed: All OpenRouter models failed. Last error: OpenRouter Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-29 10:56:30] [LLM] Falling back to SAMPLE DATA (Demo Mode)

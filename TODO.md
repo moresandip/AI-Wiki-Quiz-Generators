@@ -1,19 +1,21 @@
-# TODO: Fix Quiz Generation Database Error
+# TODO: Fix Quiz Generation Issues
 
 ## Problem
-- Error: "sqlite3.OperationalError) no such table: quizzes" when generating quiz on Vercel
-- Issue: Database tables not being created properly in Vercel serverless environment
+- App was always generating demo quiz instead of quiz based on wiki link
+- Issue: LLM API calls were failing and falling back to sample data silently
 
 ## Changes Made
-- [x] Created `backend/create_tables.py` script to handle table creation
-- [x] Modified `backend/database.py` to attempt engine creation even if connection test fails (for Vercel /tmp)
-- [x] Updated `api/index.py` to call `create_tables()` at startup
+- [x] Fixed database column type issue (changed JSONType to Text for data/user_answers columns)
+- [x] Removed silent fallback to sample data - now shows proper error when API keys are missing
+- [x] Updated table creation script
+- [x] Added better error logging for API failures
 
 ## Next Steps
-- [ ] Test locally to ensure quiz generation works
-- [ ] Deploy to Vercel and test quiz generation
-- [ ] If persistence is needed, consider migrating to a cloud database (PostgreSQL on Vercel)
+- [ ] Set up API keys (GOOGLE_API_KEY or OPENROUTER_API_KEY) in .env file
+- [ ] Test quiz generation with valid API keys
+- [ ] Deploy to Vercel and test
 
 ## Notes
-- On Vercel, database is ephemeral (/tmp/quiz.db), so quizzes won't persist across requests
-- For production with persistence, recommend using Vercel Postgres or similar cloud database
+- App now requires valid API keys to generate quizzes
+- No more silent fallback to demo data
+- Database issues have been resolved

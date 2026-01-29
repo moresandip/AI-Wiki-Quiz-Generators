@@ -110,7 +110,7 @@ Output strictly valid JSON only.
 
 def generate_with_gemini(api_key, prompt_text):
     """Generate content using Google Gemini API"""
-    models_to_try = ["gemini-1.0-pro", "gemini-pro"]
+    models_to_try = ["gemini-1.5-flash", "gemini-1.5-pro", "gemini-pro"]
     last_error = None
 
     for model_name in models_to_try:

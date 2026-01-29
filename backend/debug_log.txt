@@ -3308,3 +3308,9 @@ ValueError: Failed to generate quiz with any model. Last error: API Error 404: {
 [2026-01-29 15:01:03] [LLM] OpenRouter model deepseek/deepseek-r1:free failed: OpenRouter Error 401: {"error":{"message":"User not found.","code":401}}
 [2026-01-29 15:01:03] [LLM] OpenRouter failed, trying Google Gemini: All OpenRouter models failed. Last error: OpenRouter Error 401: {"error":{"message":"User not found.","code":401}}
 [2026-01-29 15:01:03] [LLM] Quiz generation failed: All OpenRouter models failed. Last error: OpenRouter Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-29 15:18:22] [SCRAPER] Scraping URL: https://en.wikipedia.org/wiki/MS_Dhoni
+[2026-01-29 15:18:26] [LLM] API Keys - Google: Not set
+[2026-01-29 15:18:26] [LLM] CRITICAL ERROR: No API key set. Falling back to sample data.
+[2026-01-29 15:23:57] [SCRAPER] Scraping URL: https://en.wikipedia.org/wiki/MS_Dhoni
+[2026-01-29 15:23:59] [LLM] API Keys - Google: Not set
+[2026-01-29 15:23:59] [LLM] CRITICAL ERROR: No API key set. Falling back to sample data.

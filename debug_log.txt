@@ -487,3 +487,70 @@
   }
 }
 
+[2026-01-29 15:19:45] [LLM] API Keys - Google: Set
+[2026-01-29 15:19:45] [LLM] Generating quiz for: Test Article: Artificial Intelligence
+[2026-01-29 15:19:45] [LLM] Using Google Gemini API for quiz generation
+[2026-01-29 15:19:45] [LLM] Attempting Gemini with model: gemini-1.0-pro
+[2026-01-29 15:19:46] [LLM] Gemini model gemini-1.0-pro failed: API Error 404: {
+  "error": {
+    "code": 404,
+    "message": "models/gemini-1.0-pro is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.",
+    "status": "NOT_FOUND"
+  }
+}
+
+[2026-01-29 15:19:47] [LLM] Attempting Gemini with model: gemini-pro
+[2026-01-29 15:19:48] [LLM] Gemini model gemini-pro failed: API Error 404: {
+  "error": {
+    "code": 404,
+    "message": "models/gemini-pro is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.",
+    "status": "NOT_FOUND"
+  }
+}
+
+[2026-01-29 15:19:48] [LLM] Quiz generation failed: All Gemini models failed. Last error: API Error 404: {
+  "error": {
+    "code": 404,
+    "message": "models/gemini-pro is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.",
+    "status": "NOT_FOUND"
+  }
+}
+
+[2026-01-29 15:20:47] [LLM] API Keys - Google: Set
+[2026-01-29 15:20:47] [LLM] Generating quiz for: Test Article: Artificial Intelligence
+[2026-01-29 15:20:47] [LLM] Using Google Gemini API for quiz generation
+[2026-01-29 15:20:47] [LLM] Attempting Gemini with model: gemini-1.5-flash
+[2026-01-29 15:20:50] [LLM] Gemini model gemini-1.5-flash failed: API Error 404: {
+  "error": {
+    "code": 404,
+    "message": "models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.",
+    "status": "NOT_FOUND"
+  }
+}
+
+[2026-01-29 15:20:51] [LLM] Attempting Gemini with model: gemini-1.5-pro
+[2026-01-29 15:20:52] [LLM] Gemini model gemini-1.5-pro failed: API Error 404: {
+  "error": {
+    "code": 404,
+    "message": "models/gemini-1.5-pro is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.",
+    "status": "NOT_FOUND"
+  }
+}
+
+[2026-01-29 15:20:52] [LLM] Attempting Gemini with model: gemini-pro
+[2026-01-29 15:20:54] [LLM] Gemini model gemini-pro failed: API Error 404: {
+  "error": {
+    "code": 404,
+    "message": "models/gemini-pro is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.",
+    "status": "NOT_FOUND"
+  }
+}
+
+[2026-01-29 15:20:54] [LLM] Quiz generation failed: All Gemini models failed. Last error: API Error 404: {
+  "error": {
+    "code": 404,
+    "message": "models/gemini-pro is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.",
+    "status": "NOT_FOUND"
+  }
+}
+

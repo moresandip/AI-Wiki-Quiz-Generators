@@ -1,21 +1,11 @@
-# TODO: Fix Quiz Generation Issues
+# TODO: Remove OpenRouter and Use Only Google API
 
-## Problem
-- App was always generating demo quiz instead of quiz based on wiki link
-- Issue: LLM API calls were failing and falling back to sample data silently
-
-## Changes Made
-- [x] Fixed database column type issue (changed JSONType to Text for data/user_answers columns)
-- [x] Removed silent fallback to sample data - now shows proper error when API keys are missing
-- [x] Updated table creation script
-- [x] Added better error logging for API failures
-
-## Next Steps
-- [ ] Set up API keys (GOOGLE_API_KEY or OPENROUTER_API_KEY) in .env file
-- [ ] Test quiz generation with valid API keys
-- [ ] Deploy to Vercel and test
-
-## Notes
-- App now requires valid API keys to generate quizzes
-- No more silent fallback to demo data
-- Database issues have been resolved
+## Tasks
+- [x] Update backend/llm.py: Remove generate_with_openrouter function
+- [x] Update backend/llm.py: Update list_available_models to only include Google models
+- [x] Update backend/llm.py: Update test_api_connection to only test Google API key
+- [x] Update backend/llm.py: Update generate_quiz_data to only use Google API
+- [x] Update backend/check_api_key.py: Remove OpenRouter key checking logic
+- [x] Delete diagnose_setup.py file
+- [x] Delete test_openrouter.py file
+- [x] Test quiz generation with only Google API (OpenRouter successfully removed, Google API configured)

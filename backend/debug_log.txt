@@ -3218,3 +3218,93 @@ ValueError: Failed to generate quiz with any model. Last error: API Error 404: {
 [2026-01-29 12:45:07] [LLM] OpenRouter model deepseek/deepseek-r1:free failed: OpenRouter Error 401: {"error":{"message":"User not found.","code":401}}
 [2026-01-29 12:45:07] [LLM] OpenRouter failed, trying Google Gemini: All OpenRouter models failed. Last error: OpenRouter Error 401: {"error":{"message":"User not found.","code":401}}
 [2026-01-29 12:45:07] [LLM] Quiz generation failed: All OpenRouter models failed. Last error: OpenRouter Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-29 12:50:41] [SCRAPER] Scraping URL: https://en.wikipedia.org/wiki/MS_Dhoni
+[2026-01-29 12:50:44] [LLM] API Keys - Google: Not set, OpenRouter: Set
+[2026-01-29 12:50:44] [LLM] Generating quiz for: MS Dhoni
+[2026-01-29 12:50:44] [LLM] Using OpenRouter API for quiz generation
+[2026-01-29 12:50:44] [LLM] Attempting OpenRouter with model: google/gemini-2.0-flash-lite-preview-02-05:free
+[2026-01-29 12:50:47] [LLM] OpenRouter Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-29 12:50:47] [LLM] OpenRouter model google/gemini-2.0-flash-lite-preview-02-05:free failed: OpenRouter Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-29 12:50:47] [LLM] Attempting OpenRouter with model: google/gemini-2.0-pro-exp-02-05:free
+[2026-01-29 12:50:50] [LLM] OpenRouter Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-29 12:50:50] [LLM] OpenRouter model google/gemini-2.0-pro-exp-02-05:free failed: OpenRouter Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-29 12:50:50] [LLM] Attempting OpenRouter with model: deepseek/deepseek-r1:free
+[2026-01-29 12:50:51] [LLM] OpenRouter Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-29 12:50:51] [LLM] OpenRouter model deepseek/deepseek-r1:free failed: OpenRouter Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-29 12:50:51] [LLM] OpenRouter failed, trying Google Gemini: All OpenRouter models failed. Last error: OpenRouter Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-29 12:50:51] [LLM] Quiz generation failed: All OpenRouter models failed. Last error: OpenRouter Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-29 14:33:10] [SCRAPER] Scraping URL: https://en.wikipedia.org/wiki/MS_Dhoni
+[2026-01-29 14:33:14] [LLM] API Keys - Google: Not set, OpenRouter: Set
+[2026-01-29 14:33:14] [LLM] Generating quiz for: MS Dhoni
+[2026-01-29 14:33:14] [LLM] Using OpenRouter API for quiz generation
+[2026-01-29 14:33:14] [LLM] Attempting OpenRouter with model: google/gemini-2.0-flash-lite-preview-02-05:free
+[2026-01-29 14:33:16] [LLM] OpenRouter Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-29 14:33:16] [LLM] OpenRouter model google/gemini-2.0-flash-lite-preview-02-05:free failed: OpenRouter Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-29 14:33:16] [LLM] Attempting OpenRouter with model: google/gemini-2.0-pro-exp-02-05:free
+[2026-01-29 14:33:18] [LLM] OpenRouter Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-29 14:33:18] [LLM] OpenRouter model google/gemini-2.0-pro-exp-02-05:free failed: OpenRouter Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-29 14:33:18] [LLM] Attempting OpenRouter with model: deepseek/deepseek-r1:free
+[2026-01-29 14:33:21] [LLM] OpenRouter Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-29 14:33:21] [LLM] OpenRouter model deepseek/deepseek-r1:free failed: OpenRouter Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-29 14:33:21] [LLM] OpenRouter failed, trying Google Gemini: All OpenRouter models failed. Last error: OpenRouter Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-29 14:33:21] [LLM] Quiz generation failed: All OpenRouter models failed. Last error: OpenRouter Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-29 14:33:48] [SCRAPER] Scraping URL: https://en.wikipedia.org/wiki/MS_Dhoni
+[2026-01-29 14:33:52] [LLM] API Keys - Google: Not set, OpenRouter: Set
+[2026-01-29 14:33:52] [LLM] Generating quiz for: MS Dhoni
+[2026-01-29 14:33:52] [LLM] Using OpenRouter API for quiz generation
+[2026-01-29 14:33:52] [LLM] Attempting OpenRouter with model: google/gemini-2.0-flash-lite-preview-02-05:free
+[2026-01-29 14:33:53] [LLM] OpenRouter Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-29 14:33:53] [LLM] OpenRouter model google/gemini-2.0-flash-lite-preview-02-05:free failed: OpenRouter Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-29 14:33:53] [LLM] Attempting OpenRouter with model: google/gemini-2.0-pro-exp-02-05:free
+[2026-01-29 14:33:54] [LLM] OpenRouter Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-29 14:33:54] [LLM] OpenRouter model google/gemini-2.0-pro-exp-02-05:free failed: OpenRouter Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-29 14:33:54] [LLM] Attempting OpenRouter with model: deepseek/deepseek-r1:free
+[2026-01-29 14:33:56] [LLM] OpenRouter Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-29 14:33:56] [LLM] OpenRouter model deepseek/deepseek-r1:free failed: OpenRouter Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-29 14:33:56] [LLM] OpenRouter failed, trying Google Gemini: All OpenRouter models failed. Last error: OpenRouter Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-29 14:33:56] [LLM] Quiz generation failed: All OpenRouter models failed. Last error: OpenRouter Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-29 14:53:08] [SCRAPER] Scraping URL: https://en.wikipedia.org/wiki/MS_Dhoni
+[2026-01-29 14:53:10] [LLM] API Keys - Google: Not set, OpenRouter: Set
+[2026-01-29 14:53:10] [LLM] Generating quiz for: MS Dhoni
+[2026-01-29 14:53:10] [LLM] Using OpenRouter API for quiz generation
+[2026-01-29 14:53:10] [LLM] Attempting OpenRouter with model: google/gemini-2.0-flash-lite-preview-02-05:free
+[2026-01-29 14:53:13] [LLM] OpenRouter Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-29 14:53:13] [LLM] OpenRouter model google/gemini-2.0-flash-lite-preview-02-05:free failed: OpenRouter Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-29 14:53:13] [LLM] Attempting OpenRouter with model: google/gemini-2.0-pro-exp-02-05:free
+[2026-01-29 14:53:14] [LLM] OpenRouter Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-29 14:53:14] [LLM] OpenRouter model google/gemini-2.0-pro-exp-02-05:free failed: OpenRouter Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-29 14:53:14] [LLM] Attempting OpenRouter with model: deepseek/deepseek-r1:free
+[2026-01-29 14:53:16] [LLM] OpenRouter Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-29 14:53:16] [LLM] OpenRouter model deepseek/deepseek-r1:free failed: OpenRouter Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-29 14:53:16] [LLM] OpenRouter failed, trying Google Gemini: All OpenRouter models failed. Last error: OpenRouter Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-29 14:53:16] [LLM] Quiz generation failed: All OpenRouter models failed. Last error: OpenRouter Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-29 14:53:29] [SCRAPER] Scraping URL: https://en.wikipedia.org/wiki/MS_Dhoni
+[2026-01-29 14:53:33] [LLM] API Keys - Google: Not set, OpenRouter: Set
+[2026-01-29 14:53:33] [LLM] Generating quiz for: MS Dhoni
+[2026-01-29 14:53:33] [LLM] Using OpenRouter API for quiz generation
+[2026-01-29 14:53:33] [LLM] Attempting OpenRouter with model: google/gemini-2.0-flash-lite-preview-02-05:free
+[2026-01-29 14:53:34] [LLM] OpenRouter Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-29 14:53:34] [LLM] OpenRouter model google/gemini-2.0-flash-lite-preview-02-05:free failed: OpenRouter Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-29 14:53:34] [LLM] Attempting OpenRouter with model: google/gemini-2.0-pro-exp-02-05:free
+[2026-01-29 14:53:36] [LLM] OpenRouter Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-29 14:53:36] [LLM] OpenRouter model google/gemini-2.0-pro-exp-02-05:free failed: OpenRouter Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-29 14:53:36] [LLM] Attempting OpenRouter with model: deepseek/deepseek-r1:free
+[2026-01-29 14:53:38] [LLM] OpenRouter Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-29 14:53:38] [LLM] OpenRouter model deepseek/deepseek-r1:free failed: OpenRouter Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-29 14:53:38] [LLM] OpenRouter failed, trying Google Gemini: All OpenRouter models failed. Last error: OpenRouter Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-29 14:53:38] [LLM] Quiz generation failed: All OpenRouter models failed. Last error: OpenRouter Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-29 15:00:52] [SCRAPER] Scraping URL: https://en.wikipedia.org/wiki/MS_Dhoni
+[2026-01-29 15:00:55] [LLM] API Keys - Google: Not set, OpenRouter: Set
+[2026-01-29 15:00:55] [LLM] Generating quiz for: MS Dhoni
+[2026-01-29 15:00:55] [LLM] Using OpenRouter API for quiz generation
+[2026-01-29 15:00:55] [LLM] Attempting OpenRouter with model: google/gemini-2.0-flash-lite-preview-02-05:free
+[2026-01-29 15:00:58] [LLM] OpenRouter Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-29 15:00:58] [LLM] OpenRouter model google/gemini-2.0-flash-lite-preview-02-05:free failed: OpenRouter Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-29 15:00:58] [LLM] Attempting OpenRouter with model: google/gemini-2.0-pro-exp-02-05:free
+[2026-01-29 15:01:01] [LLM] OpenRouter Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-29 15:01:01] [LLM] OpenRouter model google/gemini-2.0-pro-exp-02-05:free failed: OpenRouter Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-29 15:01:01] [LLM] Attempting OpenRouter with model: deepseek/deepseek-r1:free
+[2026-01-29 15:01:03] [LLM] OpenRouter Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-29 15:01:03] [LLM] OpenRouter model deepseek/deepseek-r1:free failed: OpenRouter Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-29 15:01:03] [LLM] OpenRouter failed, trying Google Gemini: All OpenRouter models failed. Last error: OpenRouter Error 401: {"error":{"message":"User not found.","code":401}}
+[2026-01-29 15:01:03] [LLM] Quiz generation failed: All OpenRouter models failed. Last error: OpenRouter Error 401: {"error":{"message":"User not found.","code":401}}

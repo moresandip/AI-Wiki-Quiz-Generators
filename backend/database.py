@@ -28,6 +28,11 @@ if not DATABASE_URL:
         DB_PATH = "/tmp/quiz.db"
         DATABASE_URL = f"sqlite:///{DB_PATH}"
         print(f"Running on Vercel, using ephemeral DB at: {DB_PATH}")
+        # Ensure the directory exists (though /tmp should always exist)
+        try:
+            os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
+        except Exception as e:
+            print(f"Error creating DB directory: {e}")
     else:
         # Local development fallback
         BASE_DIR = os.path.dirname(os.path.abspath(__file__))

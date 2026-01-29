@@ -109,14 +109,14 @@ Output the result in this exact JSON format:
   ]
 }}
 
-Output strictly valid JSON only.
+Output strictly valid JSON only. Do not wrap the output in markdown code blocks (e.g., ```json ... ```). Just return the raw JSON string.
 """
 
 
 
 def generate_with_gemini(api_key, prompt_text):
     """Generate content using Google Gemini API"""
-    models_to_try = ["gemini-2.0-flash", "gemini-flash-latest", "gemini-1.5-flash-latest", "gemini-1.5-pro-latest", "gemini-1.5-flash", "gemini-1.5-pro"]
+    models_to_try = ["gemini-2.0-flash", "gemini-2.5-flash", "gemini-flash-latest", "gemini-pro-latest"]
     last_error = None
 
     for model_name in models_to_try:
@@ -181,17 +181,29 @@ def generate_quiz_data(scraped_data):
 
         # Clean up content
         content = content.strip()
-
+        
+        # Remove markdown code blocks if present
+        if content.startswith("```"):
+            content = re.sub(r"^```(?:json)?\s*", "", content)
+            content = re.sub(r"\s*```$", "", content)
+            
         # Parse JSON
         try:
             quiz_data = json.loads(content)
         except json.JSONDecodeError:
-            # Try to extract JSON from the response
-            json_match = re.search(r'\{.*\}', content, re.DOTALL)
-            if json_match:
-                quiz_data = json.loads(json_match.group())
+            # Try to extract JSON from the response using a non-greedy match for the outer braces
+            # Find the first '{' and the last '}'
+            start_idx = content.find('{')
+            end_idx = content.rfind('}')
+            
+            if start_idx != -1 and end_idx != -1:
+                json_str = content[start_idx:end_idx+1]
+                try:
+                    quiz_data = json.loads(json_str)
+                except json.JSONDecodeError as e:
+                     raise ValueError(f"Failed to parse JSON from response: {e}. Content snippet: {content[:200]}...")
             else:
-                raise ValueError(f"Failed to parse JSON from response: {content[:200]}...")
+                raise ValueError(f"Failed to find JSON object in response: {content[:200]}...")
 
         return {
             "title": scraped_data["title"],

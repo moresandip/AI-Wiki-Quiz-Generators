@@ -9,3 +9,4 @@
 - [x] Delete diagnose_setup.py file
 - [x] Delete test_openrouter.py file
 - [x] Test quiz generation with only Google API (OpenRouter successfully removed, Google API configured)
+- [x] Fix "Failed to fetch" error: Update start_app.bat to start backend on port 8001 to match frontend proxy configuration

@@ -1,3 +1,5 @@
+
+
 import os
 import re
 import json
@@ -117,7 +119,7 @@ Output strictly valid JSON only. Do not wrap the output in markdown code blocks 
 
 def generate_with_gemini(api_key, prompt_text):
     """Generate content using Google Gemini API"""
-    models_to_try = ["gemini-2.0-flash", "gemini-2.5-flash", "gemini-flash-latest", "gemini-pro-latest"]
+    models_to_try = ["gemini-1.5-flash", "gemini-1.5-pro", "gemini-pro"]
     last_error = None
 
     for model_name in models_to_try:

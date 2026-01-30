@@ -29,11 +29,11 @@ if %errorlevel% neq 0 (
     exit /b 1
 )
 
-:: Check if port 8000 is already in use
-netstat -an | findstr ":8000" >nul
+:: Check if port 8001 is already in use
+netstat -an | findstr ":8001" >nul
 if %errorlevel% == 0 (
-    echo [WARNING] Port 8000 is already in use!
-    echo Please close the application using port 8000 or change the port.
+    echo [WARNING] Port 8001 is already in use!
+    echo Please close the application using port 8001 or change the port.
     echo.
     pause
     exit /b 1
@@ -42,7 +42,7 @@ if %errorlevel% == 0 (
 :: Start Backend
 echo [1/2] Starting Backend Server...
 cd /d "%~dp0backend"
-start "Backend Server" cmd /k "cd /d %~dp0backend && if exist venv\Scripts\activate.bat (venv\Scripts\activate && echo Backend starting on http://localhost:8000 && uvicorn main:app --reload --host 0.0.0.0 --port 8000) else (echo ERROR: Virtual environment not found! && echo Please run: python -m venv venv && pause)"
+start "Backend Server" cmd /k "cd /d %~dp0backend && if exist venv\Scripts\activate.bat (venv\Scripts\activate && echo Backend starting on http://localhost:8001 && uvicorn main:app --reload --host 0.0.0.0 --port 8001) else (echo ERROR: Virtual environment not found! && echo Please run: python -m venv venv && pause)"
 cd /d "%~dp0"
 
 :: Wait a bit for backend to start
@@ -53,9 +53,9 @@ timeout /t 3 /nobreak >nul
 echo Checking backend health...
 set /a retry_count=0
 :check_backend
-powershell -Command "try { $response = Invoke-WebRequest -Uri 'http://localhost:8000/health' -TimeoutSec 2 -UseBasicParsing; exit 0 } catch { exit 1 }" >nul 2>&1
+powershell -Command "try { $response = Invoke-WebRequest -Uri 'http://localhost:8001/health' -TimeoutSec 2 -UseBasicParsing; exit 0 } catch { exit 1 }" >nul 2>&1
 if %errorlevel% == 0 (
-    echo [OK] Backend is running on http://localhost:8000
+    echo [OK] Backend is running on http://localhost:8001
 ) else (
     set /a retry_count+=1
     if %retry_count% geq 15 (

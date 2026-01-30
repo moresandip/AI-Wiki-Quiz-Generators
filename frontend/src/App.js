@@ -396,6 +396,16 @@ function App() {
               </div>
             )}
 
+            {quizData.related_topics && quizData.related_topics.length > 0 && (
+              <div className="related-topics">
+                <h3>Related Topics</h3>
+                <div className="topics-tags">
+                  {quizData.related_topics.map((topic, index) => (
+                    <span key={index} className="topic-tag">{topic}</span>
+                  ))}
+                </div>
+              </div>
+            )}
 
           </div>
         )}

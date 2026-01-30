@@ -106,7 +106,8 @@ Output the result in this exact JSON format:
       "difficulty": "easy",
       "explanation": "Explanation here."
     }}
-  ]
+  ],
+  "related_topics": ["Topic 1", "Topic 2", "Topic 3"]
 }}
 
 Output strictly valid JSON only. Do not wrap the output in markdown code blocks (e.g., ```json ... ```). Just return the raw JSON string.
@@ -210,6 +211,7 @@ def generate_quiz_data(scraped_data):
             "summary": scraped_data["summary"],
             "key_entities": scraped_data["key_entities"],
             "sections": scraped_data["sections"],
+            "related_topics": quiz_data.get("related_topics", []),
             "quiz": quiz_data.get("quiz", [])
         }
 

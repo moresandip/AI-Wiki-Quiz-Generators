@@ -3538,3 +3538,243 @@ ValueError: Failed to generate quiz with any model. Last error: API Error 404: {
   }
 }
 
+[2026-01-29 17:28:44] [SCRAPER] Scraping URL: https://en.wikipedia.org/wiki/MS_Dhoni
+[2026-01-29 17:28:47] [LLM] API Keys - Google: Set
+[2026-01-29 17:28:47] [LLM] Generating quiz for: MS Dhoni
+[2026-01-29 17:28:47] [LLM] Using Google Gemini API for quiz generation
+[2026-01-29 17:28:47] [LLM] Attempting Gemini with model: gemini-2.0-flash
+[2026-01-29 17:28:48] [LLM] Gemini model gemini-2.0-flash failed: API Error 403: {
+  "error": {
+    "code": 403,
+    "message": "Your API key was reported as leaked. Please use another API key.",
+    "status": "PERMISSION_DENIED"
+  }
+}
+
+[2026-01-29 17:28:48] [LLM] Attempting Gemini with model: gemini-2.5-flash
+[2026-01-29 17:28:49] [LLM] Gemini model gemini-2.5-flash failed: API Error 403: {
+  "error": {
+    "code": 403,
+    "message": "Your API key was reported as leaked. Please use another API key.",
+    "status": "PERMISSION_DENIED"
+  }
+}
+
+[2026-01-29 17:28:49] [LLM] Attempting Gemini with model: gemini-flash-latest
+[2026-01-29 17:28:51] [LLM] Gemini model gemini-flash-latest failed: API Error 403: {
+  "error": {
+    "code": 403,
+    "message": "Your API key was reported as leaked. Please use another API key.",
+    "status": "PERMISSION_DENIED"
+  }
+}
+
+[2026-01-29 17:28:51] [LLM] Attempting Gemini with model: gemini-pro-latest
+[2026-01-29 17:28:52] [LLM] Gemini model gemini-pro-latest failed: API Error 403: {
+  "error": {
+    "code": 403,
+    "message": "Your API key was reported as leaked. Please use another API key.",
+    "status": "PERMISSION_DENIED"
+  }
+}
+
+[2026-01-29 17:28:52] [LLM] Quiz generation failed: All Gemini models failed. Last error: API Error 403: {
+  "error": {
+    "code": 403,
+    "message": "Your API key was reported as leaked. Please use another API key.",
+    "status": "PERMISSION_DENIED"
+  }
+}
+
+[2026-01-29 17:31:27] [SCRAPER] Scraping URL: https://en.wikipedia.org/wiki/MS_Dhoni
+[2026-01-29 17:31:30] [LLM] API Keys - Google: Set
+[2026-01-29 17:31:30] [LLM] Generating quiz for: MS Dhoni
+[2026-01-29 17:31:30] [LLM] Using Google Gemini API for quiz generation
+[2026-01-29 17:31:30] [LLM] Attempting Gemini with model: gemini-2.0-flash
+[2026-01-29 17:31:32] [LLM] Gemini model gemini-2.0-flash failed: API Error 403: {
+  "error": {
+    "code": 403,
+    "message": "Your API key was reported as leaked. Please use another API key.",
+    "status": "PERMISSION_DENIED"
+  }
+}
+
+[2026-01-29 17:31:32] [LLM] Attempting Gemini with model: gemini-2.5-flash
+[2026-01-29 17:31:33] [LLM] Gemini model gemini-2.5-flash failed: API Error 403: {
+  "error": {
+    "code": 403,
+    "message": "Your API key was reported as leaked. Please use another API key.",
+    "status": "PERMISSION_DENIED"
+  }
+}
+
+[2026-01-29 17:31:33] [LLM] Attempting Gemini with model: gemini-flash-latest
+[2026-01-29 17:31:34] [LLM] Gemini model gemini-flash-latest failed: API Error 403: {
+  "error": {
+    "code": 403,
+    "message": "Your API key was reported as leaked. Please use another API key.",
+    "status": "PERMISSION_DENIED"
+  }
+}
+
+[2026-01-29 17:31:34] [LLM] Attempting Gemini with model: gemini-pro-latest
+[2026-01-29 17:31:35] [LLM] Gemini model gemini-pro-latest failed: API Error 403: {
+  "error": {
+    "code": 403,
+    "message": "Your API key was reported as leaked. Please use another API key.",
+    "status": "PERMISSION_DENIED"
+  }
+}
+
+[2026-01-29 17:31:35] [LLM] Quiz generation failed: All Gemini models failed. Last error: API Error 403: {
+  "error": {
+    "code": 403,
+    "message": "Your API key was reported as leaked. Please use another API key.",
+    "status": "PERMISSION_DENIED"
+  }
+}
+
+[2026-01-30 14:33:40] [SCRAPER] Scraping URL: https://en.wikipedia.org/wiki/MS_Dhoni
+[2026-01-30 14:33:42] [LLM] API Keys - Google: Set
+[2026-01-30 14:33:42] [LLM] Generating quiz for: MS Dhoni
+[2026-01-30 14:33:42] [LLM] Using Google Gemini API for quiz generation
+[2026-01-30 14:33:42] [LLM] Attempting Gemini with model: gemini-2.0-flash
+[2026-01-30 14:33:43] [LLM] Gemini model gemini-2.0-flash failed: API Error 403: {
+  "error": {
+    "code": 403,
+    "message": "Your API key was reported as leaked. Please use another API key.",
+    "status": "PERMISSION_DENIED"
+  }
+}
+
+[2026-01-30 14:33:43] [LLM] Attempting Gemini with model: gemini-2.5-flash
+[2026-01-30 14:33:44] [LLM] Gemini model gemini-2.5-flash failed: API Error 403: {
+  "error": {
+    "code": 403,
+    "message": "Your API key was reported as leaked. Please use another API key.",
+    "status": "PERMISSION_DENIED"
+  }
+}
+
+[2026-01-30 14:33:44] [LLM] Attempting Gemini with model: gemini-flash-latest
+[2026-01-30 14:33:45] [LLM] Gemini model gemini-flash-latest failed: API Error 403: {
+  "error": {
+    "code": 403,
+    "message": "Your API key was reported as leaked. Please use another API key.",
+    "status": "PERMISSION_DENIED"
+  }
+}
+
+[2026-01-30 14:33:45] [LLM] Attempting Gemini with model: gemini-pro-latest
+[2026-01-30 14:33:46] [LLM] Gemini model gemini-pro-latest failed: API Error 403: {
+  "error": {
+    "code": 403,
+    "message": "Your API key was reported as leaked. Please use another API key.",
+    "status": "PERMISSION_DENIED"
+  }
+}
+
+[2026-01-30 14:33:46] [LLM] Quiz generation failed: All Gemini models failed. Last error: API Error 403: {
+  "error": {
+    "code": 403,
+    "message": "Your API key was reported as leaked. Please use another API key.",
+    "status": "PERMISSION_DENIED"
+  }
+}
+
+[2026-01-30 14:35:04] [SCRAPER] Scraping URL: https://en.wikipedia.org/wiki/MS_Dhoni
+[2026-01-30 14:35:09] [LLM] API Keys - Google: Set
+[2026-01-30 14:35:09] [LLM] Generating quiz for: MS Dhoni
+[2026-01-30 14:35:09] [LLM] Using Google Gemini API for quiz generation
+[2026-01-30 14:35:09] [LLM] Attempting Gemini with model: gemini-2.0-flash
+[2026-01-30 14:35:11] [LLM] Gemini model gemini-2.0-flash failed: API Error 403: {
+  "error": {
+    "code": 403,
+    "message": "Your API key was reported as leaked. Please use another API key.",
+    "status": "PERMISSION_DENIED"
+  }
+}
+
+[2026-01-30 14:35:11] [LLM] Attempting Gemini with model: gemini-2.5-flash
+[2026-01-30 14:35:12] [LLM] Gemini model gemini-2.5-flash failed: API Error 403: {
+  "error": {
+    "code": 403,
+    "message": "Your API key was reported as leaked. Please use another API key.",
+    "status": "PERMISSION_DENIED"
+  }
+}
+
+[2026-01-30 14:35:12] [LLM] Attempting Gemini with model: gemini-flash-latest
+[2026-01-30 14:35:13] [LLM] Gemini model gemini-flash-latest failed: API Error 403: {
+  "error": {
+    "code": 403,
+    "message": "Your API key was reported as leaked. Please use another API key.",
+    "status": "PERMISSION_DENIED"
+  }
+}
+
+[2026-01-30 14:35:13] [LLM] Attempting Gemini with model: gemini-pro-latest
+[2026-01-30 14:35:14] [LLM] Gemini model gemini-pro-latest failed: API Error 403: {
+  "error": {
+    "code": 403,
+    "message": "Your API key was reported as leaked. Please use another API key.",
+    "status": "PERMISSION_DENIED"
+  }
+}
+
+[2026-01-30 14:35:14] [LLM] Quiz generation failed: All Gemini models failed. Last error: API Error 403: {
+  "error": {
+    "code": 403,
+    "message": "Your API key was reported as leaked. Please use another API key.",
+    "status": "PERMISSION_DENIED"
+  }
+}
+
+[2026-01-30 14:56:25] [SCRAPER] Scraping URL: https://en.wikipedia.org/wiki/MS_Dhoni
+[2026-01-30 14:56:27] [LLM] API Keys - Google: Set
+[2026-01-30 14:56:27] [LLM] Generating quiz for: MS Dhoni
+[2026-01-30 14:56:27] [LLM] Using Google Gemini API for quiz generation
+[2026-01-30 14:56:27] [LLM] Attempting Gemini with model: gemini-2.0-flash
+[2026-01-30 14:56:29] [LLM] Gemini model gemini-2.0-flash failed: API Error 403: {
+  "error": {
+    "code": 403,
+    "message": "Your API key was reported as leaked. Please use another API key.",
+    "status": "PERMISSION_DENIED"
+  }
+}
+
+[2026-01-30 14:56:29] [LLM] Attempting Gemini with model: gemini-2.5-flash
+[2026-01-30 14:56:30] [LLM] Gemini model gemini-2.5-flash failed: API Error 403: {
+  "error": {
+    "code": 403,
+    "message": "Your API key was reported as leaked. Please use another API key.",
+    "status": "PERMISSION_DENIED"
+  }
+}
+
+[2026-01-30 14:56:30] [LLM] Attempting Gemini with model: gemini-flash-latest
+[2026-01-30 14:56:31] [LLM] Gemini model gemini-flash-latest failed: API Error 403: {
+  "error": {
+    "code": 403,
+    "message": "Your API key was reported as leaked. Please use another API key.",
+    "status": "PERMISSION_DENIED"
+  }
+}
+
+[2026-01-30 14:56:31] [LLM] Attempting Gemini with model: gemini-pro-latest
+[2026-01-30 14:56:32] [LLM] Gemini model gemini-pro-latest failed: API Error 403: {
+  "error": {
+    "code": 403,
+    "message": "Your API key was reported as leaked. Please use another API key.",
+    "status": "PERMISSION_DENIED"
+  }
+}
+
+[2026-01-30 14:56:32] [LLM] Quiz generation failed: All Gemini models failed. Last error: API Error 403: {
+  "error": {
+    "code": 403,
+    "message": "Your API key was reported as leaked. Please use another API key.",
+    "status": "PERMISSION_DENIED"
+  }
+}
+
